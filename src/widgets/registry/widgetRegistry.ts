@@ -1,4 +1,4 @@
-import { PriceWidget } from '@/widgets/PriceWidget/ui/PriceWidget';
+import { PriceWidget } from '@/widgets/price/ui/PriceWidget';
 
 import type { WidgetConfig, WidgetType } from './widgetTypes';
 

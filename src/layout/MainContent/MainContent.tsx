@@ -1,5 +1,5 @@
 import { MainContentWrapper } from './MainContent.styles';
-import { DashboardGrid } from '@/layout/DashboardGrid/DashboardGrid';
+import { DashboardGrid } from '@/layout/DashboardGrid';
 
 export const MainContent = () => {
   return (

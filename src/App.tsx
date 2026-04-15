@@ -1,7 +1,7 @@
-import { AppLayout } from '@/layout/AppLayout/AppLayout';
-import { Topbar } from '@/layout/Topbar/Topbar';
-import { MainLayout } from '@/layout/MainLayout/MainLayout';
-import { BottomPanel } from '@/layout/BottomPanel/BottomPanel';
+import { AppLayout } from '@/layout/AppLayout';
+import { Topbar } from '@/layout/Topbar';
+import { MainLayout } from '@/layout/MainLayout';
+import { BottomPanel } from '@/layout/BottomPanel';
 
 export default function App() {
   return (
