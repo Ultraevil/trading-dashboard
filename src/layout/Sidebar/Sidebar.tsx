@@ -3,6 +3,7 @@ import { useAppDispatch } from '@/app/store/hooks';
 import { SidebarWrapper } from './Sidebar.styles';
 import { addWidget } from '@/features/dashboard/model/dashboardSlice';
 import type { WidgetType } from '@/widgets/registry/widgetTypes';
+import { LoginForm } from '@/features/auth/ui/LoginForm';
 
 export const Sidebar = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +18,9 @@ export const Sidebar = () => {
           {widget.title}
         </button>
       ))}
+
+      <h4>Login</h4>
+      <LoginForm />
     </SidebarWrapper>
   );
 };

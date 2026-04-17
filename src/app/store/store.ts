@@ -5,18 +5,25 @@ import dashboardReducer, {
 } from '@/features/dashboard/model/dashboardSlice';
 import { persistDashboardMiddleware } from '@/features/dashboard/model/persistMiddleware';
 import { loadState } from '@/features/dashboard/model/persist';
+import { authApi } from '@/features/auth/api/authApi';
+import authReducer from '@/features/auth/model/authSlice';
 
 const preloaded = loadState();
 
 export const store = configureStore({
   reducer: {
-    [baseApi.reducerPath]: baseApi.reducer,
+    auth: authReducer,
     dashboard: dashboardReducer,
+
+    // API slices
+    [baseApi.reducerPath]: baseApi.reducer,
+    [authApi.reducerPath]: authApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(baseApi.middleware)
+      .concat(authApi.middleware)
       .concat(persistDashboardMiddleware),
 });
 

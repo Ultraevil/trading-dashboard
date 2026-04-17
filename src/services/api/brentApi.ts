@@ -15,9 +15,9 @@ export const brentApi = baseApi.injectEndpoints({
           authorization: `Token ${import.meta.env.VITE_OIL_PRICE_TOKEN}`,
         },
       }),
-      transformResponse: (response: BrentResponse) => {
-        return response.data.price;
-      },
+
+      transformResponse: (response: BrentResponse) => response.data.price,
+
       providesTags: ['Market'],
     }),
   }),

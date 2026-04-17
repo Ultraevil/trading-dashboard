@@ -7,7 +7,7 @@ import App from './App';
 import { theme } from './styles/theme';
 import { Global } from '@emotion/react';
 import { globalStyles } from './styles/GlobalStyle';
-import { store } from './app/store/store';
+import { store } from './app/store';
 import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')!).render(
