@@ -8,7 +8,18 @@ import { LoginForm } from '@/features/auth/ui/LoginForm';
 export const Sidebar = () => {
   const dispatch = useAppDispatch();
   const onAddWidget = (type: WidgetType) => {
-    dispatch(addWidget(type));
+    dispatch(
+      addWidget({
+        id: type,
+        item: {
+          i: type,
+          x: 0,
+          y: 0,
+          w: 2,
+          h: 2,
+        },
+      }),
+    );
   };
   return (
     <SidebarWrapper>

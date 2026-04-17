@@ -11,10 +11,10 @@ export type LayoutItem = {
   h: number;
 };
 
-export type Layouts = Record<Breakpoint, LayoutItem[]>;
+export type Layouts = Partial<Record<Breakpoint, LayoutItem[]>>;
 
 export interface DashboardState {
-  widgets: readonly WidgetType[];
+  widgets: WidgetType[];
   layouts: Layouts;
 }
 
