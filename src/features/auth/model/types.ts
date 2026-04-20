@@ -1,6 +1,7 @@
 export type LoginResponse = {
   login: {
     accessToken: string;
+    refreshToken: string;
   };
 };
 

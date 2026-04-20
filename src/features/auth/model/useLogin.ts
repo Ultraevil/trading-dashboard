@@ -1,6 +1,6 @@
 import { useLoginMutation } from '../api/authApi';
 import { useAppDispatch } from '@/app/store/hooks';
-import { setToken } from './authSlice';
+import { setTokens } from './authSlice';
 
 export const useLogin = () => {
   const [loginMutation] = useLoginMutation();
@@ -9,7 +9,10 @@ export const useLogin = () => {
   const login = async (email: string, password: string) => {
     const res = await loginMutation({ email, password }).unwrap();
 
-    dispatch(setToken(res.accessToken));
+    dispatch(setTokens(res));
+
+    localStorage.setItem('accessToken', res.accessToken);
+    localStorage.setItem('refreshToken', res.refreshToken);
   };
 
   return { login };

@@ -4,8 +4,10 @@ import { SidebarWrapper } from './Sidebar.styles';
 import { addWidget } from '@/features/dashboard/model/dashboardSlice';
 import type { WidgetType } from '@/widgets/registry/widgetTypes';
 import { LoginForm } from '@/features/auth/ui/LoginForm';
+import { useLogout } from '@/features/auth/model/useLogout';
 
 export const Sidebar = () => {
+  const { logout } = useLogout();
   const dispatch = useAppDispatch();
   const onAddWidget = (type: WidgetType) => {
     dispatch(
@@ -29,9 +31,9 @@ export const Sidebar = () => {
           {widget.title}
         </button>
       ))}
-
       <h4>Login</h4>
       <LoginForm />
+      <button onClick={logout}>Logout</button>
     </SidebarWrapper>
   );
 };
