@@ -5,7 +5,6 @@ import dashboardReducer, {
 } from '@/features/dashboard/model/dashboardSlice';
 import { persistDashboardMiddleware } from '@/features/dashboard/model/persistMiddleware';
 import { loadState } from '@/features/dashboard/model/persist';
-import { authApi } from '@/features/auth/api/authApi';
 import authReducer from '@/features/auth/model/authSlice';
 import { dashboardApi } from '@/features/dashboard/api/dashboardApi';
 
@@ -16,20 +15,13 @@ export const store = configureStore({
     auth: authReducer,
     dashboard: dashboardReducer,
 
-    // API slices
-    [baseApi.reducerPath]: baseApi.reducer,
-    [authApi.reducerPath]: authApi.reducer,
-
-    // 🔥 RTK Query reducer
     [dashboardApi.reducerPath]: dashboardApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(baseApi.middleware)
-      .concat(authApi.middleware)
-      .concat(persistDashboardMiddleware)
-      .concat(dashboardApi.middleware),
+      .concat(persistDashboardMiddleware),
 });
 
 if (preloaded) {

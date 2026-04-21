@@ -1,13 +1,8 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { graphqlBaseQuery } from '@/services/graphql/baseGraphql';
 import type { LoginResponse, LoginCredentials } from '../model/types';
 import { setTokens } from '@/features/auth/model/authSlice';
+import { baseApi } from '@/services/api/baseApi';
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
-  baseQuery: graphqlBaseQuery({
-    baseUrl: import.meta.env.VITE_GRAPHQL_URL,
-  }),
+export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<
       { accessToken: string; refreshToken: string },

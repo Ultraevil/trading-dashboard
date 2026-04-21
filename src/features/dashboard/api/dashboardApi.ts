@@ -1,18 +1,8 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { graphqlBaseQuery } from '@/services/graphql/baseGraphql';
+import { baseApi } from '@/services/api/baseApi';
+import type { GetDashboardResponse, SaveDashboardInput } from './types';
+import type { Layouts } from '@/features/dashboard/model/types';
 
-import type {
-  GetDashboardResponse,
-  SaveDashboardInput,
-} from './types';
-import { Layouts } from '@/features/dashboard/model/types';
-
-export const dashboardApi = createApi({
-  reducerPath: 'dashboardApi',
-  baseQuery: graphqlBaseQuery({
-    baseUrl: import.meta.env.VITE_GRAPHQL_URL,
-  }),
-
+export const dashboardApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getDashboard: builder.query<Layouts, void>({
       query: () => ({
@@ -20,12 +10,12 @@ export const dashboardApi = createApi({
           query: `
             query GetDashboard {
               getDashboard
-            }  
+            }
           `,
         }),
       }),
-
-      transformResponse: (res: GetDashboardResponse) => res.getDashboard,
+      transformResponse: (res: { data: GetDashboardResponse }) =>
+        res.data.getDashboard,
     }),
 
     saveDashboard: builder.mutation<void, SaveDashboardInput>({

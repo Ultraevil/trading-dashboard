@@ -1,7 +1,7 @@
-import { useGetBrentPriceQuery } from '@/services/api/brentApi';
+import { useGetBrentPriceQuery } from '@/features/market/marketApi';
 
 export const PriceWidget = () => {
-  const { data: price, isLoading, error, refetch } = useGetBrentPriceQuery();
+  const { data, isLoading, error, refetch } = useGetBrentPriceQuery();
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading price</div>;
 
@@ -9,7 +9,7 @@ export const PriceWidget = () => {
     <div style={{ padding: 12, background: '#111827', color: 'white' }}>
       <h3>Brent Crude</h3>
 
-      <div style={{ fontSize: 28 }}>${price}</div>
+      <div style={{ fontSize: 28 }}>${data?.price}</div>
 
       <button onClick={() => refetch()}>Refresh</button>
     </div>

@@ -1,25 +1,11 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { graphqlBaseQuery } from '@/services/graphql/baseGraphql';
 
-/**
- * Base API for all RTK Query endpoints
- * - shared baseUrl
- * - auth headers
- * - error handling foundation
- */
 export const baseApi = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API_URL,
 
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token');
-
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`);
-      }
-
-      return headers;
-    },
+  baseQuery: graphqlBaseQuery({
+    baseUrl: import.meta.env.VITE_GRAPHQL_URL,
   }),
 
   tagTypes: ['User', 'Market', 'Widget', 'Dashboard'],
