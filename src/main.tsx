@@ -9,15 +9,18 @@ import { Global } from '@emotion/react';
 import { globalStyles } from './styles/GlobalStyle';
 import { store } from './app/store';
 import { BrowserRouter } from 'react-router-dom';
+import { MarketProvider } from '@/app/providers/MarketProvider';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <Global styles={globalStyles} />
       <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <MarketProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </MarketProvider>
       </Provider>
     </ThemeProvider>
   </StrictMode>,
