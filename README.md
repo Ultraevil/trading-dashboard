@@ -1,73 +1,88 @@
-# React + TypeScript + Vite
+# Trading Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A widget-based trading dashboard: drag/resize grid layout, a live price feed
+over a websocket, GraphQL-backed auth and layout persistence via RTK Query,
+light/dark theming, and a small plugin-style widget system.
 
-Currently, two official plugins are available:
+## Running it
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm install
+cp .env.example .env   # fill in VITE_GRAPHQL_URL / VITE_WS_URL
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Other scripts: `npm run build`, `npm run lint`, `npm run typecheck`, `npm run format`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+## Tech choices
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+- **React 19 + TypeScript + Vite**.
+- **Redux Toolkit** for both client state (auth, widgets, dashboard layout,
+  UI, theme) and server state (RTK Query, injected per-domain into a single
+  `baseApi`). One library instead of RTK + a separate server-state library,
+  since RTK Query already gives caching/invalidation/loading flags.
+- **Emotion (`@emotion/styled` + `@emotion/react`)** for styling. Every
+  component has a sibling `*.styles.ts` file — no inline styles, no
+  CSS-in-JSX. A shared `styles/theme.ts` defines the design tokens (colors,
+  spacing, radii, typography), with a `dark`/`light` variant and a
+  `getTheme(mode)` helper; `ThemeProvider` is wired to the `theme` redux
+  slice so the whole app reacts to the toggle in the header.
+- **react-grid-layout** for the drag/drop/resize dashboard grid, with
+  responsive breakpoints (`lg`/`md`/`sm`).
+- **react-router-dom** for `Dashboard` / `Analytics` / `Settings` routes,
+  all rendered inside a single `MainLayout` shell via `<Outlet />`.
+- **socket.io-client** for the live price feed (`services/websocket`),
+  wrapped in a small class that tracks connection status and lets multiple
+  widgets subscribe to the same symbol without opening multiple sockets.
+- A hand-written GraphQL layer: `services/graphql/client.ts` is a thin
+  `fetch`-based RTK Query `baseQuery` (handles the `Bearer` token and
+  silently retries once after refreshing on a 401), with query/mutation
+  strings extracted into `services/graphql/{queries,mutations}`.
+
+## Architecture
+
 ```
+src/
+├── app/            store, typed hooks, providers (Redux/Apollo/Router)
+├── routes/         route paths + <Routes> config
+├── layout/         MainLayout shell (Header/Sidebar/BottomPanel) and the
+│                   DashboardGrid
+├── pages/          the three routed pages
+├── features/       one folder per domain slice: auth, dashboard (grid
+│                   layout only), widgets (which widgets are active),
+│                   market (live prices + socket status), ui (sidebar
+│                   collapse, toasts), theme
+├── services/       data layer: RTK Query endpoints (api/), GraphQL
+│                   transport (graphql/), websocket client (websocket/)
+├── widgets/        the actual widget components (PriceWidget, ChartWidget,
+│                   StatsWidget), each with its own styles file
+├── shared/         ui/ (Button, Input, Toast, WidgetContainer — generic,
+│                   reusable, no feature imports), hooks/ (useTrend,
+│                   useValueHistory)
+└── styles/         theme tokens + global styles
+```
+
+**State separation:** `features/widgets` owns *which* widgets are on the
+board; `features/dashboard` owns *where* they sit on the grid. They stay in
+sync via `dashboardSlice`'s `extraReducers` listening to `widgetsSlice`'s
+`addWidget`/`removeWidget` actions, rather than one slice owning both
+concerns. Each is persisted to its own `localStorage` key independently.
+
+**Live data:** `useMarketPrice(symbol)` subscribes to the websocket and
+writes into the `market` slice (single source of truth), so `PriceWidget`,
+`ChartWidget`, and `StatsWidget` can all watch `BTCUSDT` without each
+holding its own copy or opening its own subscription.
+
+## UI/UX details worth noting
+
+- Loading (skeletons), error (with retry), and empty states (no widgets on
+  the board yet) are all handled explicitly, not just "happy path".
+- Widgets get remove buttons via `WidgetContainer`; the sidebar widget list
+  shows an active/inactive state per widget and is itself searchable.
+- A small global toast system (`features/ui` + `shared/ui/Toast`) surfaces
+  login success — a real notification system rather than one-off `alert`s.
+- Responsive: sidebar collapses to icon-only (manual toggle in the header,
+  or automatically stacks above the content on narrower viewports).
+- Accessibility: labelled form fields with `aria-invalid`/`aria-describedby`
+  wiring, `aria-pressed` on toggle buttons, `role="status"`/`aria-live` on
+  toasts, focus-visible outlines, keyboard-reachable nav.

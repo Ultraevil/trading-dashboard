@@ -1,3 +1,5 @@
+import { REFRESH } from '@/services/graphql/mutations/refresh';
+
 export const refreshTokenRequest = async (
   baseUrl: string,
   refreshToken: string,
@@ -9,14 +11,7 @@ export const refreshTokenRequest = async (
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        query: `
-          mutation Refresh($refreshToken: String!) {
-            refresh(refreshToken: $refreshToken) {
-              accessToken
-              refreshToken
-            }
-          }
-        `,
+        query: REFRESH,
         variables: { refreshToken },
       }),
     });

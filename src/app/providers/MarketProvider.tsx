@@ -1,7 +1,13 @@
-import { useEffect } from 'react';
-import { marketSocket } from '@/services/socket/marketSocket';
+import { useEffect, Fragment } from 'react';
+import type { ReactNode } from 'react';
+import { marketSocket } from '@/services/websocket/marketSocket';
 
-export const MarketProvider = ({ children }: { children: React.ReactNode }) => {
+/**
+ * Owns the lifecycle of the shared market websocket connection: connects
+ * once when the app mounts and tears the connection down on unmount, so
+ * individual widgets only need to subscribe/unsubscribe to symbols.
+ */
+export const MarketProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     marketSocket.connect();
 
@@ -10,5 +16,5 @@ export const MarketProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  return children;
+  return <Fragment>{children}</Fragment>;
 };

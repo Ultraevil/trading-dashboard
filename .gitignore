@@ -15,6 +15,14 @@ build
 coverage
 .vscode
 
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# tsc -b (composite project) re-emits vite.config.ts as .js/.d.ts on every
+# `npm run build` — harmless, but shouldn't be committed
+/vite.config.js
+/vite.config.d.ts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { graphqlBaseQuery } from '@/services/graphql/baseGraphql';
+import { graphqlBaseQuery } from '@/services/graphql/client';
 
 export const baseApi = createApi({
   reducerPath: 'api',
