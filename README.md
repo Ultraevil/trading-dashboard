@@ -14,6 +14,11 @@ npm run dev
 
 Other scripts: `npm run build`, `npm run lint`, `npm run typecheck`, `npm run format`.
 
+## Live Demo
+
+Demo Video:
+https://www.loom.com/share/fe505548ca1d47fd9c74219be3d7a468
+
 ## Testing
 
 ```bash
