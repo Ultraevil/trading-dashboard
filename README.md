@@ -21,6 +21,10 @@ Other scripts: `npm run build`, `npm run lint`, `npm run typecheck`, `npm run fo
   UI, theme) and server state (RTK Query, injected per-domain into a single
   `baseApi`). One library instead of RTK + a separate server-state library,
   since RTK Query already gives caching/invalidation/loading flags.
+- **React Hook Form + Yup** (`@hookform/resolvers`) for form state and
+  validation — `LoginForm` uses a schema (`LoginForm.schema.ts`) instead of
+  hand-rolled `useState`/regex checks, with field errors wired through
+  `aria-invalid`/`aria-describedby` on the shared `Input` component.
 - **Emotion (`@emotion/styled` + `@emotion/react`)** for styling. Every
   component has a sibling `*.styles.ts` file — no inline styles, no
   CSS-in-JSX. A shared `styles/theme.ts` defines the design tokens (colors,

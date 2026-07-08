@@ -1,52 +1,31 @@
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
-import type { FormEvent } from 'react';
 import { useLogin } from './useLogin';
 import { useAppDispatch } from '@/app/hooks';
 import { addToast } from '@/features/ui/uiSlice';
 import { Input } from '@/shared/ui/Input';
 import { Button } from '@/shared/ui/Button';
+import { loginSchema } from './LoginForm.schema';
+import type { LoginFormValues } from './LoginForm.schema';
 import { Form, FormError } from './LoginForm.styles';
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-interface FieldErrors {
-  email?: string;
-  password?: string;
-}
 
 export const LoginForm = () => {
   const { login, isLoading } = useLogin();
   const dispatch = useAppDispatch();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
 
-  const validate = (): boolean => {
-    const errors: FieldErrors = {};
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: yupResolver(loginSchema),
+    mode: 'onBlur',
+  });
 
-    if (!email) {
-      errors.email = 'Email is required';
-    } else if (!EMAIL_PATTERN.test(email)) {
-      errors.email = 'Enter a valid email address';
-    }
-
-    if (!password) {
-      errors.password = 'Password is required';
-    } else if (password.length < 6) {
-      errors.password = 'Must be at least 6 characters';
-    }
-
-    setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async ({ email, password }: LoginFormValues) => {
     setFormError(null);
-
-    if (!validate()) return;
 
     try {
       await login(email, password);
@@ -57,24 +36,22 @@ export const LoginForm = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit} noValidate>
+    <Form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Input
         type="email"
         label="Email"
         placeholder="you@example.com"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        error={fieldErrors.email}
+        error={errors.email?.message || ''}
         autoComplete="email"
+        {...register('email')}
       />
       <Input
         type="password"
         label="Password"
         placeholder="••••••••"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        error={fieldErrors.password}
+        error={errors.password?.message || ''}
         autoComplete="current-password"
+        {...register('password')}
       />
       {formError && <FormError role="alert">{formError}</FormError>}
       <Button type="submit" isLoading={isLoading} fullWidth>
