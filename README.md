@@ -88,13 +88,13 @@ src/
 │                   DashboardGrid
 ├── pages/          the three routed pages
 ├── features/       one folder per domain slice: auth, dashboard (grid
-│                   layout only), widgets (which widgets are active),
-│                   market (live prices + socket status), ui (sidebar
-│                   collapse, toasts), theme
+│                   layout only), widgets (which widgets are active, the
+│                   type registry, and the widget components themselves —
+│                   PriceWidget/ChartWidget/StatsWidget — under
+│                   widgets/components/), market (live prices + socket
+│                   status), ui (sidebar collapse, toasts), theme
 ├── services/       data layer: RTK Query endpoints (api/), GraphQL
 │                   transport (graphql/), websocket client (websocket/)
-├── widgets/        the actual widget components (PriceWidget, ChartWidget,
-│                   StatsWidget), each with its own styles file
 ├── shared/         ui/ (Button, Input, Toast, WidgetContainer — generic,
 │                   reusable, no feature imports), hooks/ (useTrend,
 │                   useValueHistory), i18n/ (en/uk translation resources +

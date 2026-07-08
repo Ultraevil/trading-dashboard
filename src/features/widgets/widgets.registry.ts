@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
-import { PriceWidget } from '@/widgets/PriceWidget/PriceWidget';
-import { ChartWidget } from '@/widgets/ChartWidget/ChartWidget';
-import { StatsWidget } from '@/widgets/StatsWidget/StatsWidget';
+import { PriceWidget } from './components/PriceWidget/PriceWidget';
+import { ChartWidget } from './components/ChartWidget/ChartWidget';
+import { StatsWidget } from './components/StatsWidget/StatsWidget';
 
 export const WIDGET_PRICE = 'price' as const;
 export const WIDGET_CHART = 'chart' as const;
@@ -22,7 +22,8 @@ export interface WidgetConfig {
  * the dashboard shell needs (translation key for the title shown in the
  * widget header, sidebar "add widget" list, etc). Adding a new widget type
  * only requires a new entry here plus the component itself under
- * `src/widgets` (and a translation for `titleKey` in each locale file).
+ * `features/widgets/components` (and a translation for `titleKey` in each
+ * locale file).
  */
 export const widgetRegistry: Record<WidgetType, WidgetConfig> = {
   price: {
