@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useGetBrentPriceQuery } from '@/services/api/brentApi';
 import { useMarketPrice } from '@/features/market/useMarketPrice';
 import { useTrend } from '@/shared/hooks/useTrend';
@@ -14,6 +15,7 @@ import {
 } from './PriceWidget.styles';
 
 export const PriceWidget = () => {
+  const { t } = useTranslation();
   const { data, isLoading, isFetching, error, refetch } =
     useGetBrentPriceQuery();
   const btcPrice = useMarketPrice('BTCUSDT');
@@ -24,19 +26,19 @@ export const PriceWidget = () => {
   return (
     <Wrapper>
       <Row>
-        <Label>Brent Crude (BRN)</Label>
+        <Label>{t('widgets.price.brentLabel')}</Label>
       </Row>
 
       {isLoading ? (
         <Skeleton />
       ) : error ? (
-        <ErrorText role="alert">Couldn&apos;t load the price.</ErrorText>
+        <ErrorText role="alert">{t('widgets.price.error')}</ErrorText>
       ) : (
         <Price trend={brentTrend}>${data?.price.toFixed(2)}</Price>
       )}
 
       <Row>
-        <Label>BTC/USDT · live</Label>
+        <Label>{t('widgets.price.btcLabel')}</Label>
       </Row>
 
       {btcPrice == null ? (
@@ -52,7 +54,7 @@ export const PriceWidget = () => {
           onClick={() => refetch()}
           isLoading={isFetching}
         >
-          Refresh
+          {t('common.refresh')}
         </Button>
       </Footer>
     </Wrapper>

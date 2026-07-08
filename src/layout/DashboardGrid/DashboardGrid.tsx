@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import type { Layout } from 'react-grid-layout';
 import { Responsive, useContainerWidth } from 'react-grid-layout';
 import { debounce } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -30,6 +31,7 @@ import {
 } from './DashboardGrid.styles';
 
 export const DashboardGrid = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const widgets = useAppSelector(selectActiveWidgets);
   const layouts = useAppSelector(selectLayouts);
@@ -72,8 +74,8 @@ export const DashboardGrid = () => {
     return (
       <DashboardGridWrapper>
         <EmptyState>
-          <EmptyStateTitle>No widgets on your dashboard yet</EmptyStateTitle>
-          <span>Add one from the “Widgets” list in the sidebar.</span>
+          <EmptyStateTitle>{t('dashboard.emptyTitle')}</EmptyStateTitle>
+          <span>{t('dashboard.emptyHint')}</span>
         </EmptyState>
       </DashboardGridWrapper>
     );
@@ -96,7 +98,7 @@ export const DashboardGrid = () => {
             return (
               <div key={type}>
                 <WidgetContainer
-                  title={widget.title}
+                  title={t(widget.titleKey)}
                   onRemove={() => dispatch(removeWidget(type))}
                 >
                   <Component />

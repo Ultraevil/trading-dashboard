@@ -1,0 +1,108 @@
+{
+  "common": {
+    "refresh": "Refresh",
+    "logOut": "Log out"
+  },
+  "header": {
+    "brand": "Trading Dashboard",
+    "toggleSidebar": "Toggle sidebar",
+    "toggleTheme": "Toggle color theme",
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme",
+    "toggleLanguage": "Switch language",
+    "guest": "Guest"
+  },
+  "sidebar": {
+    "primary": "Primary",
+    "menu": "Menu",
+    "nav": {
+      "dashboard": "Dashboard",
+      "analytics": "Analytics",
+      "settings": "Settings"
+    },
+    "widgets": "Widgets",
+    "searchWidgets": "Search widgets…",
+    "searchWidgetsAria": "Search widgets",
+    "noWidgetsMatch": "No widgets match “{{query}}”.",
+    "account": "Account"
+  },
+  "auth": {
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "signIn": "Sign in",
+    "signInSuccess": "Signed in successfully",
+    "signInError": "Invalid email or password. Please try again.",
+    "notSignedIn": "You are not signed in yet — use the sidebar to log in.",
+    "signedInAs": "Signed in as",
+    "unknown": "unknown",
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Must be at least 6 characters"
+    }
+  },
+  "bottomPanel": {
+    "marketFeed": "Market feed: {{status}}",
+    "widgetsOnBoard": "Widgets on board: {{count}}",
+    "status": {
+      "connected": "connected",
+      "disconnected": "disconnected",
+      "idle": "idle"
+    }
+  },
+  "dashboard": {
+    "emptyTitle": "No widgets on your dashboard yet",
+    "emptyHint": "Add one from the “Widgets” list in the sidebar."
+  },
+  "widgetContainer": {
+    "refreshAria": "Refresh {{title}}",
+    "removeWidget": "Remove widget",
+    "removeAria": "Remove {{title}}"
+  },
+  "widgets": {
+    "price": {
+      "title": "Brent Price",
+      "brentLabel": "Brent Crude (BRN)",
+      "btcLabel": "BTC/USDT · live",
+      "error": "Couldn't load the price."
+    },
+    "chart": {
+      "title": "BTC Chart",
+      "label": "BTC/USDT · live",
+      "waiting": "Waiting for enough live ticks to draw a chart…",
+      "sparklineAria": "BTC/USDT price sparkline"
+    },
+    "stats": {
+      "title": "BTC Stats",
+      "last": "Last",
+      "sessionLow": "Session low",
+      "sessionHigh": "Session high",
+      "sessionAvg": "Session avg",
+      "samples": "Samples"
+    }
+  },
+  "pages": {
+    "analytics": {
+      "title": "Analytics",
+      "liveFeed": "Live feed",
+      "marketSocket": "Market socket",
+      "noLivePrices": "No live prices received yet.",
+      "activeWidgets": "Active widgets ({{count}})"
+    },
+    "settings": {
+      "title": "Settings",
+      "appearance": "Appearance",
+      "theme": "Theme",
+      "dark": "Dark",
+      "light": "Light",
+      "language": "Language",
+      "collapseSidebar": "Collapse sidebar",
+      "expandedView": "Expanded view",
+      "collapsedView": "Collapsed view",
+      "account": "Account"
+    }
+  }
+}

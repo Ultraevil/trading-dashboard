@@ -1,4 +1,5 @@
 import { useTheme } from '@emotion/react';
+import { useTranslation } from 'react-i18next';
 import { useMarketPrice } from '@/features/market/useMarketPrice';
 import { useValueHistory } from '@/shared/hooks/useValueHistory';
 import { Wrapper, Header, Label, Value, ChartArea, EmptyState } from './ChartWidget.styles';
@@ -6,6 +7,7 @@ import { Wrapper, Header, Label, Value, ChartArea, EmptyState } from './ChartWid
 const MAX_POINTS = 40;
 
 export const ChartWidget = () => {
+  const { t } = useTranslation();
   const price = useMarketPrice('BTCUSDT');
   const theme = useTheme();
   const history = useValueHistory(price, MAX_POINTS);
@@ -14,9 +16,9 @@ export const ChartWidget = () => {
     return (
       <Wrapper>
         <Header>
-          <Label>BTC/USDT · live</Label>
+          <Label>{t('widgets.chart.label')}</Label>
         </Header>
-        <EmptyState>Waiting for enough live ticks to draw a chart…</EmptyState>
+        <EmptyState>{t('widgets.chart.waiting')}</EmptyState>
       </Wrapper>
     );
   }
@@ -41,7 +43,7 @@ export const ChartWidget = () => {
   return (
     <Wrapper>
       <Header>
-        <Label>BTC/USDT · live</Label>
+        <Label>{t('widgets.chart.label')}</Label>
         <Value>${price?.toFixed(2)}</Value>
       </Header>
       <ChartArea>
@@ -51,7 +53,7 @@ export const ChartWidget = () => {
           height="100%"
           preserveAspectRatio="none"
           role="img"
-          aria-label="BTC/USDT price sparkline"
+          aria-label={t('widgets.chart.sparklineAria')}
         >
           <polyline
             points={points}

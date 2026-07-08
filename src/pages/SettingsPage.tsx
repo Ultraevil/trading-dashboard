@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { selectThemeMode, setThemeMode } from '@/features/theme/themeSlice';
 import {
@@ -10,6 +11,7 @@ import {
 } from '@/features/auth/authSelectors';
 import { useLogout } from '@/features/auth/useLogout';
 import { Button } from '@/shared/ui/Button';
+import type { SupportedLanguage } from '@/shared/i18n/config';
 import {
   PageWrapper,
   PageTitle,
@@ -20,6 +22,7 @@ import {
 } from './Page.styles';
 
 export const SettingsPage = () => {
+  const { t, i18n } = useTranslation();
   const dispatch = useAppDispatch();
   const themeMode = useAppSelector(selectThemeMode);
   const isSidebarCollapsed = useAppSelector(selectIsSidebarCollapsed);
@@ -27,57 +30,80 @@ export const SettingsPage = () => {
   const email = useAppSelector(selectAuthEmail);
   const { logout } = useLogout();
 
+  const currentLanguage = i18n.language as SupportedLanguage;
+
   return (
     <PageWrapper>
-      <PageTitle>Settings</PageTitle>
+      <PageTitle>{t('pages.settings.title')}</PageTitle>
 
       <Card>
-        <CardTitle>Appearance</CardTitle>
+        <CardTitle>{t('pages.settings.appearance')}</CardTitle>
         <Row>
-          <span>Theme</span>
+          <span>{t('pages.settings.theme')}</span>
           <div style={{ display: 'flex', gap: 8 }}>
             <Button
               size="sm"
               variant={themeMode === 'dark' ? 'primary' : 'ghost'}
               onClick={() => dispatch(setThemeMode('dark'))}
             >
-              Dark
+              {t('pages.settings.dark')}
             </Button>
             <Button
               size="sm"
               variant={themeMode === 'light' ? 'primary' : 'ghost'}
               onClick={() => dispatch(setThemeMode('light'))}
             >
-              Light
+              {t('pages.settings.light')}
             </Button>
           </div>
         </Row>
         <Row>
-          <span>Collapse sidebar</span>
+          <span>{t('pages.settings.language')}</span>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button
+              size="sm"
+              variant={currentLanguage === 'en' ? 'primary' : 'ghost'}
+              onClick={() => i18n.changeLanguage('en')}
+            >
+              English
+            </Button>
+            <Button
+              size="sm"
+              variant={currentLanguage === 'uk' ? 'primary' : 'ghost'}
+              onClick={() => i18n.changeLanguage('uk')}
+            >
+              Українська
+            </Button>
+          </div>
+        </Row>
+        <Row>
+          <span>{t('pages.settings.collapseSidebar')}</span>
           <Button
             size="sm"
             variant="ghost"
             onClick={() => dispatch(setSidebarCollapsed(!isSidebarCollapsed))}
           >
-            {isSidebarCollapsed ? 'Expanded view' : 'Collapsed view'}
+            {isSidebarCollapsed
+              ? t('pages.settings.expandedView')
+              : t('pages.settings.collapsedView')}
           </Button>
         </Row>
       </Card>
 
       <Card>
-        <CardTitle>Account</CardTitle>
+        <CardTitle>{t('pages.settings.account')}</CardTitle>
         {isAuthenticated ? (
           <>
             <Row>
-              <span>Signed in as</span>
-              <Muted>{email ?? 'unknown'}</Muted>
+              <span>{t('auth.signedInAs')}</span>
+              <Muted>{email ?? t('auth.unknown')}</Muted>
             </Row>
             <Button variant="danger" size="sm" onClick={logout}>
-              Log out
+              {t('common.logOut')}
             </Button>
           </>
         ) : (
-          <Muted>You are not signed in yet — use the sidebar to log in.</Muted>
+          <Muted>{t('auth.notSignedIn')}</Muted>
         )}
       </Card>
     </PageWrapper>

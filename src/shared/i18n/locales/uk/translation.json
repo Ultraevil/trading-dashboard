@@ -1,0 +1,108 @@
+{
+  "common": {
+    "refresh": "Оновити",
+    "logOut": "Вийти"
+  },
+  "header": {
+    "brand": "Торговий дашборд",
+    "toggleSidebar": "Згорнути/розгорнути бічну панель",
+    "toggleTheme": "Змінити тему",
+    "switchToLight": "Перемкнути на світлу тему",
+    "switchToDark": "Перемкнути на темну тему",
+    "toggleLanguage": "Змінити мову",
+    "guest": "Гість"
+  },
+  "sidebar": {
+    "primary": "Основне меню",
+    "menu": "Меню",
+    "nav": {
+      "dashboard": "Дашборд",
+      "analytics": "Аналітика",
+      "settings": "Налаштування"
+    },
+    "widgets": "Віджети",
+    "searchWidgets": "Пошук віджетів…",
+    "searchWidgetsAria": "Пошук віджетів",
+    "noWidgetsMatch": "Не знайдено віджетів за запитом «{{query}}».",
+    "account": "Обліковий запис"
+  },
+  "auth": {
+    "email": "Електронна пошта",
+    "emailPlaceholder": "you@example.com",
+    "password": "Пароль",
+    "passwordPlaceholder": "••••••••",
+    "signIn": "Увійти",
+    "signInSuccess": "Ви успішно увійшли",
+    "signInError": "Невірний email або пароль. Спробуйте ще раз.",
+    "notSignedIn": "Ви ще не увійшли — скористайтеся формою в бічній панелі.",
+    "signedInAs": "Ви увійшли як",
+    "unknown": "невідомо",
+    "errors": {
+      "emailRequired": "Введіть email",
+      "emailInvalid": "Введіть коректний email",
+      "passwordRequired": "Введіть пароль",
+      "passwordMin": "Мінімум 6 символів"
+    }
+  },
+  "bottomPanel": {
+    "marketFeed": "Ринковий фід: {{status}}",
+    "widgetsOnBoard": "Віджетів на дошці: {{count}}",
+    "status": {
+      "connected": "підключено",
+      "disconnected": "відключено",
+      "idle": "очікування"
+    }
+  },
+  "dashboard": {
+    "emptyTitle": "На дашборді ще немає віджетів",
+    "emptyHint": "Додайте один зі списку «Віджети» в бічній панелі."
+  },
+  "widgetContainer": {
+    "refreshAria": "Оновити {{title}}",
+    "removeWidget": "Видалити віджет",
+    "removeAria": "Видалити {{title}}"
+  },
+  "widgets": {
+    "price": {
+      "title": "Ціна Brent",
+      "brentLabel": "Brent Crude (BRN)",
+      "btcLabel": "BTC/USDT · наживо",
+      "error": "Не вдалося завантажити ціну."
+    },
+    "chart": {
+      "title": "Графік BTC",
+      "label": "BTC/USDT · наживо",
+      "waiting": "Очікуємо достатньо даних, щоб побудувати графік…",
+      "sparklineAria": "Спарклайн ціни BTC/USDT"
+    },
+    "stats": {
+      "title": "Статистика BTC",
+      "last": "Остання",
+      "sessionLow": "Мінімум сесії",
+      "sessionHigh": "Максимум сесії",
+      "sessionAvg": "Середнє за сесію",
+      "samples": "Зразків"
+    }
+  },
+  "pages": {
+    "analytics": {
+      "title": "Аналітика",
+      "liveFeed": "Живий фід",
+      "marketSocket": "Ринковий сокет",
+      "noLivePrices": "Ще не отримано жодної ціни наживо.",
+      "activeWidgets": "Активні віджети ({{count}})"
+    },
+    "settings": {
+      "title": "Налаштування",
+      "appearance": "Зовнішній вигляд",
+      "theme": "Тема",
+      "dark": "Темна",
+      "light": "Світла",
+      "language": "Мова",
+      "collapseSidebar": "Згорнути бічну панель",
+      "expandedView": "Розгорнутий вигляд",
+      "collapsedView": "Згорнутий вигляд",
+      "account": "Обліковий запис"
+    }
+  }
+}

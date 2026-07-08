@@ -13,30 +13,31 @@ export type WidgetType = (typeof ALL_WIDGET_TYPES)[number];
 
 export interface WidgetConfig {
   type: WidgetType;
-  title: string;
+  titleKey: string;
   component: ComponentType<object>;
 }
 
 /**
  * Maps a widget type to the component that renders it and the metadata
- * the dashboard shell needs (title shown in the widget header, sidebar
- * "add widget" list, etc). Adding a new widget type only requires a new
- * entry here plus the component itself under `src/widgets`.
+ * the dashboard shell needs (translation key for the title shown in the
+ * widget header, sidebar "add widget" list, etc). Adding a new widget type
+ * only requires a new entry here plus the component itself under
+ * `src/widgets` (and a translation for `titleKey` in each locale file).
  */
 export const widgetRegistry: Record<WidgetType, WidgetConfig> = {
   price: {
     type: 'price',
-    title: 'Brent Price',
+    titleKey: 'widgets.price.title',
     component: PriceWidget,
   },
   chart: {
     type: 'chart',
-    title: 'BTC Chart',
+    titleKey: 'widgets.chart.title',
     component: ChartWidget,
   },
   stats: {
     type: 'stats',
-    title: 'BTC Stats',
+    titleKey: 'widgets.stats.title',
     component: StatsWidget,
   },
 };

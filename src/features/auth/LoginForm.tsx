@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLogin } from './useLogin';
 import { useAppDispatch } from '@/app/hooks';
 import { addToast } from '@/features/ui/uiSlice';
@@ -11,6 +12,7 @@ import type { LoginFormValues } from './LoginForm.schema';
 import { Form, FormError } from './LoginForm.styles';
 
 export const LoginForm = () => {
+  const { t } = useTranslation();
   const { login, isLoading } = useLogin();
   const dispatch = useAppDispatch();
   const [formError, setFormError] = useState<string | null>(null);
@@ -29,9 +31,9 @@ export const LoginForm = () => {
 
     try {
       await login(email, password);
-      dispatch(addToast('Signed in successfully', 'success'));
+      dispatch(addToast(t('auth.signInSuccess'), 'success'));
     } catch {
-      setFormError('Invalid email or password. Please try again.');
+      setFormError(t('auth.signInError'));
     }
   };
 
@@ -39,23 +41,23 @@ export const LoginForm = () => {
     <Form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Input
         type="email"
-        label="Email"
-        placeholder="you@example.com"
-        error={errors.email?.message || ''}
+        label={t('auth.email')}
+        placeholder={t('auth.emailPlaceholder')}
+        error={errors.email?.message && t(errors.email.message)}
         autoComplete="email"
         {...register('email')}
       />
       <Input
         type="password"
-        label="Password"
-        placeholder="••••••••"
-        error={errors.password?.message || ''}
+        label={t('auth.password')}
+        placeholder={t('auth.passwordPlaceholder')}
+        error={errors.password?.message && t(errors.password.message)}
         autoComplete="current-password"
         {...register('password')}
       />
       {formError && <FormError role="alert">{formError}</FormError>}
       <Button type="submit" isLoading={isLoading} fullWidth>
-        Sign in
+        {t('auth.signIn')}
       </Button>
     </Form>
   );

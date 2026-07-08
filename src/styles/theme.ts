@@ -74,8 +74,8 @@ const buildTheme = (colors: typeof darkColors) => ({
       xs: '11px',
       sm: '12px',
       md: '14px',
-      lg: '16px',
-      xl: '22px',
+      lg: '0',
+      xl: '0',
     },
   },
 

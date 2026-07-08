@@ -21,6 +21,13 @@ Other scripts: `npm run build`, `npm run lint`, `npm run typecheck`, `npm run fo
   UI, theme) and server state (RTK Query, injected per-domain into a single
   `baseApi`). One library instead of RTK + a separate server-state library,
   since RTK Query already gives caching/invalidation/loading flags.
+- **i18next + react-i18next** for internationalization — English and
+  Ukrainian, with every user-facing string moved into
+  `shared/i18n/locales/{en,uk}/translation.json`. Language is auto-detected
+  from the browser, persisted to `localStorage`, and switchable from the
+  header icon or the Settings page. Yup's validation messages are
+  translation *keys*, translated at render time, so switching languages
+  re-translates errors that are already on screen.
 - **React Hook Form + Yup** (`@hookform/resolvers`) for form state and
   validation — `LoginForm` uses a schema (`LoginForm.schema.ts`) instead of
   hand-rolled `useState`/regex checks, with field errors wired through
@@ -62,7 +69,8 @@ src/
 │                   StatsWidget), each with its own styles file
 ├── shared/         ui/ (Button, Input, Toast, WidgetContainer — generic,
 │                   reusable, no feature imports), hooks/ (useTrend,
-│                   useValueHistory)
+│                   useValueHistory), i18n/ (en/uk translation resources +
+│                   i18next config)
 └── styles/         theme tokens + global styles
 ```
 

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import {
   WidgetWrapper,
   WidgetHeader,
@@ -14,6 +15,8 @@ export const WidgetContainer = ({
   onRemove,
   onRefresh,
 }: WidgetContainerProps) => {
+  const { t } = useTranslation();
+
   return (
     <WidgetWrapper>
       <WidgetHeader>
@@ -21,8 +24,8 @@ export const WidgetContainer = ({
         <WidgetActions>
           {onRefresh && (
             <WidgetActionButton
-              aria-label={`Refresh ${title}`}
-              title="Refresh"
+              aria-label={t('widgetContainer.refreshAria', { title })}
+              title={t('common.refresh')}
               onClick={onRefresh}
             >
               ⟳
@@ -30,8 +33,8 @@ export const WidgetContainer = ({
           )}
           {onRemove && (
             <WidgetActionButton
-              aria-label={`Remove ${title}`}
-              title="Remove widget"
+              aria-label={t('widgetContainer.removeAria', { title })}
+              title={t('widgetContainer.removeWidget')}
               onClick={onRemove}
             >
               ×

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   addWidget,
@@ -26,6 +27,7 @@ import {
 } from './Sidebar.styles';
 
 export const Sidebar = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const activeWidgets = useAppSelector(selectActiveWidgets);
   const isCollapsed = useAppSelector(selectIsSidebarCollapsed);
@@ -36,7 +38,7 @@ export const Sidebar = () => {
   const [widgetSearch, setWidgetSearch] = useState('');
 
   const availableWidgets = Object.values(widgetRegistry).filter((widget) =>
-    widget.title.toLowerCase().includes(widgetSearch.toLowerCase()),
+    t(widget.titleKey).toLowerCase().includes(widgetSearch.toLowerCase()),
   );
 
   const onToggleWidget = (type: WidgetType) => {
@@ -48,61 +50,62 @@ export const Sidebar = () => {
   };
 
   return (
-    <SidebarWrapper collapsed={isCollapsed} aria-label="Primary">
+    <SidebarWrapper collapsed={isCollapsed} aria-label={t('sidebar.primary')}>
       <Section>
-        {!isCollapsed && <SectionLabel>Menu</SectionLabel>}
+        {!isCollapsed && <SectionLabel>{t('sidebar.menu')}</SectionLabel>}
         <NavList>
-          <NavLink to={PATHS.dashboard} end title="Dashboard">
-            📊 {!isCollapsed && 'Dashboard'}
+          <NavLink to={PATHS.dashboard} end title={t('sidebar.nav.dashboard')}>
+            📊 {!isCollapsed && t('sidebar.nav.dashboard')}
           </NavLink>
-          <NavLink to={PATHS.analytics} title="Analytics">
-            📈 {!isCollapsed && 'Analytics'}
+          <NavLink to={PATHS.analytics} title={t('sidebar.nav.analytics')}>
+            📈 {!isCollapsed && t('sidebar.nav.analytics')}
           </NavLink>
-          <NavLink to={PATHS.settings} title="Settings">
-            ⚙️ {!isCollapsed && 'Settings'}
+          <NavLink to={PATHS.settings} title={t('sidebar.nav.settings')}>
+            ⚙️ {!isCollapsed && t('sidebar.nav.settings')}
           </NavLink>
         </NavList>
       </Section>
 
       <Section>
-        {!isCollapsed && <SectionLabel>Widgets</SectionLabel>}
+        {!isCollapsed && <SectionLabel>{t('sidebar.widgets')}</SectionLabel>}
         {!isCollapsed && (
           <Input
-            placeholder="Search widgets…"
+            placeholder={t('sidebar.searchWidgets')}
             value={widgetSearch}
             onChange={(e) => setWidgetSearch(e.target.value)}
-            aria-label="Search widgets"
+            aria-label={t('sidebar.searchWidgetsAria')}
           />
         )}
         <NavList>
           {availableWidgets.map((widget) => {
             const isActive = activeWidgets.includes(widget.type);
+            const title = t(widget.titleKey);
             return (
               <NavButton
                 key={widget.type}
                 active={isActive}
                 onClick={() => onToggleWidget(widget.type)}
-                title={widget.title}
+                title={title}
                 aria-pressed={isActive}
               >
-                {isActive ? '✓' : '+'} {!isCollapsed && widget.title}
+                {isActive ? '✓' : '+'} {!isCollapsed && title}
               </NavButton>
             );
           })}
           {availableWidgets.length === 0 && !isCollapsed && (
-            <span>No widgets match “{widgetSearch}”.</span>
+            <span>{t('sidebar.noWidgetsMatch', { query: widgetSearch })}</span>
           )}
         </NavList>
       </Section>
 
       {!isCollapsed && (
         <Section>
-          <SectionLabel>Account</SectionLabel>
+          <SectionLabel>{t('sidebar.account')}</SectionLabel>
           {isAuthenticated ? (
             <AccountSummary>
               <AccountEmail>{email}</AccountEmail>
               <Button size="sm" variant="ghost" onClick={logout}>
-                Log out
+                {t('common.logOut')}
               </Button>
             </AccountSummary>
           ) : (
