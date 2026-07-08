@@ -14,6 +14,34 @@ npm run dev
 
 Other scripts: `npm run build`, `npm run lint`, `npm run typecheck`, `npm run format`.
 
+## Testing
+
+```bash
+npm test              # Jest + React Testing Library (unit/component/hook)
+npm run test:watch    # same, in watch mode
+npx playwright install chromium   # one-time browser download
+npm run test:e2e      # Playwright E2E (starts the dev server automatically)
+```
+
+- **Jest + React Testing Library** — 45 tests across hooks (`useTrend`,
+  `useValueHistory`, `useMarketPrice`), shared UI (`Button`, `Input`,
+  `WidgetContainer`), a form (`LoginForm`, covering validation and
+  submit/error flows), a widget (`StatsWidget`), and the two Redux slices
+  whose cross-slice sync is the trickiest bit of state in the app
+  (`widgetsSlice` / `dashboardSlice`). External dependencies (the login
+  mutation, the market websocket) are mocked at the module boundary rather
+  than hitting the network, so these run fast and deterministically.
+  `src/test/` holds the shared `renderWithProviders` helper (wraps
+  Redux/Theme/i18n/Router) and a `createTestStore` factory so each test
+  gets an isolated store.
+- **Playwright** — `e2e/dashboard.spec.ts` drives a real browser against
+  the running app: default widgets load, removing/re-adding widgets works,
+  removing all of them shows the empty state, sidebar navigation between
+  Dashboard/Analytics/Settings works, and the header language toggle
+  actually re-renders the UI in Ukrainian. These exercise client-side
+  behavior only, so they don't require the GraphQL/websocket backend to be
+  running.
+
 ## Tech choices
 
 - **React 19 + TypeScript + Vite**.
@@ -73,6 +101,11 @@ src/
 │                   i18next config)
 └── styles/         theme tokens + global styles
 ```
+
+Unit/component tests live next to the code they cover as `*.test.ts(x)`
+(e.g. `Button.test.tsx` beside `Button.tsx`); `src/test/` holds shared test
+infrastructure. Playwright specs live in `e2e/` at the project root, since
+they test the running app rather than a single module.
 
 **State separation:** `features/widgets` owns *which* widgets are on the
 board; `features/dashboard` owns *where* they sit on the grid. They stay in

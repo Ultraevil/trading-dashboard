@@ -1,0 +1,40 @@
+import { screen } from '@testing-library/react';
+import { renderWithProviders } from '@/test/test-utils';
+import { StatsWidget } from './StatsWidget';
+
+const mockUseMarketPrice = jest.fn();
+
+jest.mock('@/features/market/useMarketPrice', () => ({
+  useMarketPrice: (symbol: string) => mockUseMarketPrice(symbol),
+}));
+
+describe('StatsWidget', () => {
+  beforeEach(() => {
+    mockUseMarketPrice.mockReset();
+  });
+
+  it('shows placeholders before any price tick has arrived', () => {
+    mockUseMarketPrice.mockReturnValue(undefined);
+    renderWithProviders(<StatsWidget />);
+
+    // 5 stat rows, all showing the "no data yet" placeholder
+    expect(screen.getAllByText('—')).toHaveLength(4);
+    expect(screen.getByText('0')).toBeInTheDocument(); // samples count
+  });
+
+  it('renders the latest price as "Last" once a tick has arrived', () => {
+    mockUseMarketPrice.mockReturnValue(65000);
+    renderWithProviders(<StatsWidget />);
+
+    // with a single sample, last/low/high/avg are all the same value
+    expect(screen.getAllByText('$65000.00')).toHaveLength(4);
+    expect(screen.getByText('1')).toBeInTheDocument(); // samples count
+  });
+
+  it('subscribes to the BTCUSDT symbol', () => {
+    mockUseMarketPrice.mockReturnValue(100);
+    renderWithProviders(<StatsWidget />);
+
+    expect(mockUseMarketPrice).toHaveBeenCalledWith('BTCUSDT');
+  });
+});
