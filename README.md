@@ -37,13 +37,21 @@ npm run test:e2e      # Playwright E2E (starts the dev server automatically)
   mutation, the market websocket) are mocked at the module boundary rather
   than hitting the network, so these run fast and deterministically.
   `src/test/` holds the shared `renderWithProviders` helper (wraps
-  Redux/Theme/i18n/Router) and a `createTestStore` factory so each test
-  gets an isolated store.
+  Redux/Theme/i18n/Router), a `createTestStore` factory so each test
+  gets an isolated store, and `src/test/i18n.ts` (a fixed-English `t()`).
+  Since the app is internationalized, tests assert against **translation
+  keys via `t()`**, not hardcoded copy — e.g.
+  `screen.getByText(t('auth.errors.emailRequired'))` rather than
+  `screen.getByText('Email is required')` — so editing a translation
+  string doesn't break a test that has nothing to do with wording.
 - **Playwright** — `e2e/dashboard.spec.ts` (desktop project) drives a real
   browser against the running app: default widgets load, removing/re-adding
   widgets works, removing all of them shows the empty state, sidebar
   navigation between Dashboard/Analytics/Settings works, and the header
-  language toggle actually re-renders the UI in Ukrainian.
+  language toggle actually re-renders the UI in Ukrainian. Like the Jest
+  suite, assertions use translation keys — `e2e/i18n.ts` sets up a
+  standalone i18next instance (reading the same locale JSON, without the
+  browser-only language detector the app itself uses) and exports `t`/`tUk`.
   `e2e/mobile.spec.ts` runs under a separate `mobile-chromium` project
   (iPhone 13 viewport) and checks the off-canvas drawer specifically:
   closed by default, opened by the hamburger, closed again by tapping the

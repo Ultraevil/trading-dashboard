@@ -1,6 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test/test-utils';
+import { t } from '@/test/i18n';
 import { LoginForm } from './LoginForm';
 
 const mockLogin = jest.fn();
@@ -18,10 +19,14 @@ describe('LoginForm', () => {
     const user = userEvent.setup();
     renderWithProviders(<LoginForm />);
 
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.click(screen.getByRole('button', { name: t('auth.signIn') }));
 
-    expect(await screen.findByText(/email is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/password is required/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(t('auth.errors.emailRequired')),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(t('auth.errors.passwordRequired')),
+    ).toBeInTheDocument();
     expect(mockLogin).not.toHaveBeenCalled();
   });
 
@@ -29,12 +34,12 @@ describe('LoginForm', () => {
     const user = userEvent.setup();
     renderWithProviders(<LoginForm />);
 
-    await user.type(screen.getByLabelText(/email/i), 'not-an-email');
-    await user.type(screen.getByLabelText(/password/i), 'password123');
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.type(screen.getByLabelText(t('auth.email')), 'not-an-email');
+    await user.type(screen.getByLabelText(t('auth.password')), 'password123');
+    await user.click(screen.getByRole('button', { name: t('auth.signIn') }));
 
     expect(
-      await screen.findByText(/enter a valid email address/i),
+      await screen.findByText(t('auth.errors.emailInvalid')),
     ).toBeInTheDocument();
     expect(mockLogin).not.toHaveBeenCalled();
   });
@@ -43,12 +48,12 @@ describe('LoginForm', () => {
     const user = userEvent.setup();
     renderWithProviders(<LoginForm />);
 
-    await user.type(screen.getByLabelText(/email/i), 'jane@example.com');
-    await user.type(screen.getByLabelText(/password/i), '123');
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.type(screen.getByLabelText(t('auth.email')), 'jane@example.com');
+    await user.type(screen.getByLabelText(t('auth.password')), '123');
+    await user.click(screen.getByRole('button', { name: t('auth.signIn') }));
 
     expect(
-      await screen.findByText(/must be at least 6 characters/i),
+      await screen.findByText(t('auth.errors.passwordMin')),
     ).toBeInTheDocument();
     expect(mockLogin).not.toHaveBeenCalled();
   });
@@ -58,9 +63,9 @@ describe('LoginForm', () => {
     const user = userEvent.setup();
     renderWithProviders(<LoginForm />);
 
-    await user.type(screen.getByLabelText(/email/i), 'jane@example.com');
-    await user.type(screen.getByLabelText(/password/i), 'password123');
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.type(screen.getByLabelText(t('auth.email')), 'jane@example.com');
+    await user.type(screen.getByLabelText(t('auth.password')), 'password123');
+    await user.click(screen.getByRole('button', { name: t('auth.signIn') }));
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith('jane@example.com', 'password123');
@@ -72,12 +77,10 @@ describe('LoginForm', () => {
     const user = userEvent.setup();
     renderWithProviders(<LoginForm />);
 
-    await user.type(screen.getByLabelText(/email/i), 'jane@example.com');
-    await user.type(screen.getByLabelText(/password/i), 'password123');
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.type(screen.getByLabelText(t('auth.email')), 'jane@example.com');
+    await user.type(screen.getByLabelText(t('auth.password')), 'password123');
+    await user.click(screen.getByRole('button', { name: t('auth.signIn') }));
 
-    expect(
-      await screen.findByText(/invalid email or password/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(t('auth.signInError'))).toBeInTheDocument();
   });
 });

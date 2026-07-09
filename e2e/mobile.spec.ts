@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { t } from './i18n';
 
 test.describe('Mobile sidebar drawer', () => {
   test('starts closed, opens via the hamburger button, and closes via the backdrop', async ({
@@ -6,8 +7,12 @@ test.describe('Mobile sidebar drawer', () => {
   }) => {
     await page.goto('/');
 
-    const analyticsLink = page.getByRole('link', { name: /analytics/i });
-    const hamburger = page.getByRole('button', { name: /toggle sidebar/i });
+    const analyticsLink = page.getByRole('link', {
+      name: t('sidebar.nav.analytics'),
+    });
+    const hamburger = page.getByRole('button', {
+      name: t('header.toggleSidebar'),
+    });
 
     // Closed by default: the drawer is off-screen, so its content
     // shouldn't be in the visible viewport.
@@ -27,8 +32,14 @@ test.describe('Mobile sidebar drawer', () => {
   }) => {
     await page.goto('/');
 
-    await expect(page.getByText('Brent Price', { exact: true })).toBeVisible();
-    await expect(page.getByText('BTC Chart', { exact: true })).toBeVisible();
-    await expect(page.getByText('BTC Stats', { exact: true })).toBeVisible();
+    await expect(
+      page.getByText(t('widgets.price.title'), { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(t('widgets.chart.title'), { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(t('widgets.stats.title'), { exact: true }),
+    ).toBeVisible();
   });
 });

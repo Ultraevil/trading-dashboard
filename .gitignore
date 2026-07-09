@@ -19,9 +19,12 @@ coverage
 *.tsbuildinfo
 
 # tsc -b (composite project) re-emits vite.config.ts as .js/.d.ts on every
-# `npm run build` — harmless, but shouldn't be committed
+# `npm run build` — harmless, but shouldn't be committed. playwright.config.ts
+# is in the same tsconfig.node.json include list, so it gets the same treatment.
 /vite.config.js
 /vite.config.d.ts
+/playwright.config.js
+/playwright.config.d.ts
 
 # Testing
 coverage

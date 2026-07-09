@@ -1,23 +1,24 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test/test-utils';
+import { t } from '@/test/i18n';
 import { WidgetContainer } from './WidgetContainer';
 
 describe('WidgetContainer', () => {
   it('renders the title and its children', () => {
     renderWithProviders(
-      <WidgetContainer title="BTC Chart">
+      <WidgetContainer title={t('widgets.chart.title')}>
         <p>chart contents</p>
       </WidgetContainer>,
     );
 
-    expect(screen.getByText('BTC Chart')).toBeInTheDocument();
+    expect(screen.getByText(t('widgets.chart.title'))).toBeInTheDocument();
     expect(screen.getByText('chart contents')).toBeInTheDocument();
   });
 
   it('does not render remove/refresh buttons when no handlers are passed', () => {
     renderWithProviders(
-      <WidgetContainer title="BTC Chart">
+      <WidgetContainer title={t('widgets.chart.title')}>
         <p>chart contents</p>
       </WidgetContainer>,
     );
@@ -30,12 +31,18 @@ describe('WidgetContainer', () => {
     const onRemove = jest.fn();
 
     renderWithProviders(
-      <WidgetContainer title="BTC Chart" onRemove={onRemove}>
+      <WidgetContainer title={t('widgets.chart.title')} onRemove={onRemove}>
         <p>chart contents</p>
       </WidgetContainer>,
     );
 
-    await user.click(screen.getByRole('button', { name: /remove btc chart/i }));
+    await user.click(
+      screen.getByRole('button', {
+        name: t('widgetContainer.removeAria', {
+          title: t('widgets.chart.title'),
+        }),
+      }),
+    );
     expect(onRemove).toHaveBeenCalledTimes(1);
   });
 
@@ -44,12 +51,18 @@ describe('WidgetContainer', () => {
     const onRefresh = jest.fn();
 
     renderWithProviders(
-      <WidgetContainer title="BTC Chart" onRefresh={onRefresh}>
+      <WidgetContainer title={t('widgets.chart.title')} onRefresh={onRefresh}>
         <p>chart contents</p>
       </WidgetContainer>,
     );
 
-    await user.click(screen.getByRole('button', { name: /refresh btc chart/i }));
+    await user.click(
+      screen.getByRole('button', {
+        name: t('widgetContainer.refreshAria', {
+          title: t('widgets.chart.title'),
+        }),
+      }),
+    );
     expect(onRefresh).toHaveBeenCalledTimes(1);
   });
 });
