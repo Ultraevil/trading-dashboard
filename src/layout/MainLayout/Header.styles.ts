@@ -7,6 +7,11 @@ export const HeaderBar = styled.header`
   padding: 0 ${({ theme }) => theme.spacing(4)};
   background: ${({ theme }) => theme.colors.panel};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  @media (max-width: ${({ theme }) => theme.breakpoint.mobile}) {
+    gap: ${({ theme }) => theme.spacing(2)};
+    padding: 0 ${({ theme }) => theme.spacing(2)};
+  }
 `;
 
 export const Brand = styled.div`
@@ -16,6 +21,12 @@ export const Brand = styled.div`
   font-weight: 700;
   font-size: ${({ theme }) => theme.font.size.lg};
   white-space: nowrap;
+
+  @media (max-width: ${({ theme }) => theme.breakpoint.mobile}) {
+    span {
+      display: none;
+    }
+  }
 `;
 
 export const IconButton = styled.button`
@@ -46,6 +57,12 @@ export const AccountBadge = styled.span`
   gap: ${({ theme }) => theme.spacing(2)};
   font-size: ${({ theme }) => theme.font.size.sm};
   color: ${({ theme }) => theme.colors.textMuted};
+
+  @media (max-width: ${({ theme }) => theme.breakpoint.mobile}) {
+    span {
+      display: none;
+    }
+  }
 `;
 
 export const Avatar = styled.span`

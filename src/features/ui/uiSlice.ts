@@ -15,8 +15,22 @@ export interface UiState {
   toasts: Toast[];
 }
 
+const MOBILE_QUERY = '(max-width: 600px)';
+
+/**
+ * On desktop `isSidebarCollapsed` toggles between a full sidebar and a
+ * compact icon rail; on mobile the same flag toggles an off-canvas drawer
+ * (see Sidebar.styles.ts). Defaulting it to "collapsed" on narrow
+ * viewports means the drawer starts closed instead of covering the whole
+ * screen on first load.
+ */
+const getInitialSidebarCollapsed = (): boolean => {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  return window.matchMedia(MOBILE_QUERY).matches;
+};
+
 const initialState: UiState = {
-  isSidebarCollapsed: false,
+  isSidebarCollapsed: getInitialSidebarCollapsed(),
   toasts: [],
 };
 

@@ -37,7 +37,9 @@ export const Header = () => {
         ☰
       </IconButton>
 
-      <Brand>📈 {t('header.brand')}</Brand>
+      <Brand>
+        📈 <span>{t('header.brand')}</span>
+      </Brand>
 
       <Spacer />
 
@@ -52,14 +54,18 @@ export const Header = () => {
       <IconButton
         aria-label={t('header.toggleTheme')}
         onClick={() => dispatch(toggleThemeMode())}
-        title={themeMode === 'dark' ? t('header.switchToLight') : t('header.switchToDark')}
+        title={
+          themeMode === 'dark'
+            ? t('header.switchToLight')
+            : t('header.switchToDark')
+        }
       >
         {themeMode === 'dark' ? '🌙' : '☀️'}
       </IconButton>
 
       <AccountBadge>
         <Avatar>{initials}</Avatar>
-        {isAuthenticated ? email : t('header.guest')}
+        <span>{isAuthenticated ? email : t('header.guest')}</span>
       </AccountBadge>
     </HeaderBar>
   );

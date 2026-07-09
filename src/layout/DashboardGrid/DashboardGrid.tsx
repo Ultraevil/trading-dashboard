@@ -23,7 +23,11 @@ import {
   useSaveDashboardMutation,
 } from '@/services/api/dashboardApi';
 
-import { GRID_COLS, GRID_ROW_HEIGHT } from './grid.config';
+import {
+  GRID_BREAKPOINTS,
+  GRID_COLS,
+  GRID_ROW_HEIGHT,
+} from './grid.config';
 import {
   DashboardGridWrapper,
   EmptyState,
@@ -88,6 +92,7 @@ export const DashboardGrid = () => {
           layouts={layouts}
           onLayoutChange={onLayoutChange}
           width={width}
+          breakpoints={GRID_BREAKPOINTS}
           cols={GRID_COLS}
           rowHeight={GRID_ROW_HEIGHT}
         >

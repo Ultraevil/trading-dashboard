@@ -10,6 +10,12 @@ export const BottomPanelWrapper = styled.footer`
   font-size: ${({ theme }) => theme.font.size.sm};
   color: ${({ theme }) => theme.colors.textMuted};
   overflow-x: auto;
+
+  @media (max-width: ${({ theme }) => theme.breakpoint.mobile}) {
+    padding: 0 ${({ theme }) => theme.spacing(2)};
+    gap: ${({ theme }) => theme.spacing(2)};
+    font-size: ${({ theme }) => theme.font.size.xs};
+  }
 `;
 
 export const StatusDot = styled.span<{ variant: 'green' | 'red' | 'yellow' }>`
@@ -23,4 +29,10 @@ export const StatusDot = styled.span<{ variant: 'green' | 'red' | 'yellow' }>`
 
 export const LogLine = styled.span`
   white-space: nowrap;
+`;
+
+export const SecondaryLogLine = styled(LogLine)`
+  @media (max-width: ${({ theme }) => theme.breakpoint.mobile}) {
+    display: none;
+  }
 `;

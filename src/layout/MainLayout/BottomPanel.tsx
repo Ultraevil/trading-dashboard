@@ -2,7 +2,12 @@ import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/app/hooks';
 import { selectSocketStatus } from '@/features/market/marketSelectors';
 import { selectActiveWidgets } from '@/features/widgets/widgetsSlice';
-import { BottomPanelWrapper, StatusDot, LogLine } from './BottomPanel.styles';
+import {
+  BottomPanelWrapper,
+  StatusDot,
+  LogLine,
+  SecondaryLogLine,
+} from './BottomPanel.styles';
 
 export const BottomPanel = () => {
   const { t } = useTranslation();
@@ -20,11 +25,13 @@ export const BottomPanel = () => {
     <BottomPanelWrapper>
       <LogLine>
         <StatusDot variant={variant} />
-        {t('bottomPanel.marketFeed', { status: t(`bottomPanel.status.${socketStatus}`) })}
+        {t('bottomPanel.marketFeed', {
+          status: t(`bottomPanel.status.${socketStatus}`),
+        })}
       </LogLine>
-      <LogLine>
+      <SecondaryLogLine>
         {t('bottomPanel.widgetsOnBoard', { count: activeWidgets.length })}
-      </LogLine>
+      </SecondaryLogLine>
     </BottomPanelWrapper>
   );
 };

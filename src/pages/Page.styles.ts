@@ -20,6 +20,10 @@ export const Card = styled.section`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(4)};
+
+  @media (max-width: ${({ theme }) => theme.breakpoint.mobile}) {
+    padding: ${({ theme }) => theme.spacing(3)};
+  }
 `;
 
 export const CardTitle = styled.h2`
@@ -31,6 +35,7 @@ export const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: ${({ theme }) => theme.spacing(3)};
   padding: ${({ theme }) => theme.spacing(2)} 0;
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};

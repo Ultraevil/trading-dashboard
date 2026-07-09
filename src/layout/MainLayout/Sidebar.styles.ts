@@ -21,6 +21,38 @@ export const SidebarWrapper = styled.aside<{ collapsed: boolean }>`
     border-right: none;
     border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   }
+
+  /* Below the mobile breakpoint the sidebar becomes an off-canvas drawer:
+     fixed to the viewport, sliding in from the left, instead of a row of
+     horizontally-scrolling sections (which doesn't work once there's a
+     login form and a searchable widget list to fit). */
+  @media (max-width: ${({ theme }) => theme.breakpoint.mobile}) {
+    position: fixed;
+    top: ${({ theme }) => theme.layout.topbarHeight};
+    bottom: 0;
+    left: 0;
+    z-index: 40;
+    flex-direction: column;
+    width: min(85vw, 320px);
+    max-width: 320px;
+    border-right: 1px solid ${({ theme }) => theme.colors.border};
+    border-bottom: none;
+    box-shadow: ${({ theme }) => theme.shadow.lg};
+    transform: translateX(${({ collapsed }) => (collapsed ? '-100%' : '0')});
+    transition: transform ${({ theme }) => theme.transition.base};
+  }
+`;
+
+export const Backdrop = styled.div`
+  display: none;
+
+  @media (max-width: ${({ theme }) => theme.breakpoint.mobile}) {
+    display: block;
+    position: fixed;
+    inset: ${({ theme }) => theme.layout.topbarHeight} 0 0 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 30;
+  }
 `;
 
 export const Section = styled.div`

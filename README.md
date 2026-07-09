@@ -39,13 +39,16 @@ npm run test:e2e      # Playwright E2E (starts the dev server automatically)
   `src/test/` holds the shared `renderWithProviders` helper (wraps
   Redux/Theme/i18n/Router) and a `createTestStore` factory so each test
   gets an isolated store.
-- **Playwright** — `e2e/dashboard.spec.ts` drives a real browser against
-  the running app: default widgets load, removing/re-adding widgets works,
-  removing all of them shows the empty state, sidebar navigation between
-  Dashboard/Analytics/Settings works, and the header language toggle
-  actually re-renders the UI in Ukrainian. These exercise client-side
-  behavior only, so they don't require the GraphQL/websocket backend to be
-  running.
+- **Playwright** — `e2e/dashboard.spec.ts` (desktop project) drives a real
+  browser against the running app: default widgets load, removing/re-adding
+  widgets works, removing all of them shows the empty state, sidebar
+  navigation between Dashboard/Analytics/Settings works, and the header
+  language toggle actually re-renders the UI in Ukrainian.
+  `e2e/mobile.spec.ts` runs under a separate `mobile-chromium` project
+  (iPhone 13 viewport) and checks the off-canvas drawer specifically:
+  closed by default, opened by the hamburger, closed again by tapping the
+  backdrop. These exercise client-side behavior only, so they don't
+  require the GraphQL/websocket backend to be running.
 
 ## Tech choices
 
@@ -131,8 +134,20 @@ holding its own copy or opening its own subscription.
   shows an active/inactive state per widget and is itself searchable.
 - A small global toast system (`features/ui` + `shared/ui/Toast`) surfaces
   login success — a real notification system rather than one-off `alert`s.
-- Responsive: sidebar collapses to icon-only (manual toggle in the header,
-  or automatically stacks above the content on narrower viewports).
+- Responsive: three tiers, not just a single breakpoint —
+  - **Desktop**: sidebar toggles between full width and a 72px icon rail.
+  - **Tablet** (≤900px): sidebar becomes a horizontal strip stacked above
+    the content.
+  - **Mobile** (≤600px): sidebar becomes a fixed off-canvas drawer with a
+    tap-to-close backdrop, opened via the header's hamburger button and
+    closed by default on first load (detected via `matchMedia` at
+    startup); the header hides secondary text (brand name, account email)
+    down to icons only; the bottom status bar shrinks to a single line;
+    and the dashboard grid switches to genuinely different column counts
+    per breakpoint (3 → 2 → 1) with a shorter row height on phones —
+    previously `sm`/`md` both silently used 3 columns with no matching
+    react-grid-layout breakpoint below 768px, so anything narrower than a
+    tablet never got a defined layout.
 - Accessibility: labelled form fields with `aria-invalid`/`aria-describedby`
   wiring, `aria-pressed` on toggle buttons, `role="status"`/`aria-live` on
   toasts, focus-visible outlines, keyboard-reachable nav.
