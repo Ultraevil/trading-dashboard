@@ -23,5 +23,5 @@
     // ✅ STABILITY FIX (TS 2025+)
     "ignoreDeprecations": "6.0"
   },
-  "include": ["src"]
+  "include": ["src", ".storybook"]
 }
