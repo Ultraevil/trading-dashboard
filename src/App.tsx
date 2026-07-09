@@ -4,6 +4,7 @@ import { selectThemeMode } from '@/features/theme/themeSlice';
 import { getTheme } from '@/styles/theme';
 import { globalStyles } from '@/styles/GlobalStyle';
 import { MarketProvider } from '@/app/providers/MarketProvider';
+import { SessionCleanupProvider } from '@/app/providers/SessionCleanupProvider';
 import { ToastContainer } from '@/shared/ui/Toast';
 import { AppRoutes } from '@/routes';
 
@@ -14,10 +15,12 @@ export const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <Global styles={globalStyles} />
-      <MarketProvider>
-        <AppRoutes />
-        <ToastContainer />
-      </MarketProvider>
+      <SessionCleanupProvider>
+        <MarketProvider>
+          <AppRoutes />
+          <ToastContainer />
+        </MarketProvider>
+      </SessionCleanupProvider>
     </ThemeProvider>
   );
 };

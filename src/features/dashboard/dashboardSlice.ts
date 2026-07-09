@@ -21,6 +21,14 @@ const dashboardSlice = createSlice({
 
     // used to hydrate from localStorage on app start
     setState: (_, action: PayloadAction<DashboardState>) => action.payload,
+
+    // Drops whatever layout the backend gave the previous session and
+    // falls back to the local default - call this on logout so a guest
+    // (or the next person to sign in on this browser) doesn't briefly
+    // see the last authenticated user's saved grid.
+    resetLayouts: (state) => {
+      state.layouts = DEFAULT_LAYOUTS;
+    },
   },
 
   // Grid layout reacts to the widget list owned by `features/widgets`,
@@ -53,6 +61,6 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const { setLayouts, setState } = dashboardSlice.actions;
+export const { setLayouts, setState, resetLayouts } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

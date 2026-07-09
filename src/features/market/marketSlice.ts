@@ -26,9 +26,16 @@ const marketSlice = createSlice({
     setSocketStatus: (state, action: PayloadAction<SocketStatus>) => {
       state.socketStatus = action.payload;
     },
+
+    // Clears out prices received while a (possibly now stale/foreign)
+    // session was active - call this on logout so a guest or the next
+    // user doesn't see frozen numbers from the previous session.
+    resetMarket: (state) => {
+      state.prices = {};
+    },
   },
 });
 
-export const { setPrice, setSocketStatus } = marketSlice.actions;
+export const { setPrice, setSocketStatus, resetMarket } = marketSlice.actions;
 
 export default marketSlice.reducer;

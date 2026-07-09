@@ -18,6 +18,7 @@ import {
 import { selectLayouts } from '@/features/dashboard/dashboardSelectors';
 import { setLayouts } from '@/features/dashboard/dashboardSlice';
 import type { Layouts } from '@/features/dashboard/dashboard.types';
+import { selectIsAuthenticated } from '@/features/auth/authSelectors';
 import {
   useGetDashboardQuery,
   useSaveDashboardMutation,
@@ -39,11 +40,12 @@ export const DashboardGrid = () => {
   const dispatch = useAppDispatch();
   const widgets = useAppSelector(selectActiveWidgets);
   const layouts = useAppSelector(selectLayouts);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const { width, containerRef, mounted } = useContainerWidth();
 
   // Best-effort sync with the backend: if it has a saved layout,
-  // prefer it over the locally persisted one once it arrives.
-  const { data } = useGetDashboardQuery();
+  // prefer it over the locally persisted one once it arrives. Skipping
+  const { data } = useGetDashboardQuery(undefined, { skip: !isAuthenticated });
   const [saveDashboard] = useSaveDashboardMutation();
 
   useEffect(() => {
@@ -71,7 +73,15 @@ export const DashboardGrid = () => {
     };
 
     dispatch(setLayouts(normalizedLayouts));
-    saveDebounced(normalizedLayouts);
+
+    // react-grid-layout also fires this on programmatic layout changes
+    // (e.g. the reset-to-default that happens on logout), not just on
+    // user drags/resizes. Guarding on `isAuthenticated` here means a
+    // logged-out reset can't accidentally try to persist the default
+    // layout back to a session that no longer exists.
+    if (isAuthenticated) {
+      saveDebounced(normalizedLayouts);
+    }
   };
 
   if (widgets.length === 0) {

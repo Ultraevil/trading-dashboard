@@ -43,6 +43,13 @@ class MarketSocket {
 
     this.socket.on('connect', () => {
       this.setStatus('connected');
+      // Re-establish subscriptions every time a connection is (re)made -
+      // this covers the initial connect, socket.io's own automatic
+      // reconnects after a network drop, and the forced re-handshake we
+      // do from `updateAuthToken` after login/logout.
+      this.listeners.forEach((_cbs, symbol) => {
+        this.socket?.emit('subscribe', symbol);
+      });
     });
 
     this.socket.on('market:price', (data: PriceEvent) => {
@@ -54,7 +61,12 @@ class MarketSocket {
 
     this.socket.on('disconnect', () => {
       this.setStatus('disconnected');
-      this.socket = null;
+      // Note: we deliberately do NOT clear `this.socket` here. socket.io
+      // retries the connection on this same instance by default, and
+      // dropping our reference would make subscribe()/unsubscribe() (and
+      // updateAuthToken) silently no-op until something else called
+      // connect() again - which is exactly why the feed used to get stuck
+      // on "disconnected" until a full page refresh.
     });
 
     this.socket.on('connect_error', () => {
@@ -62,22 +74,51 @@ class MarketSocket {
     });
   }
 
-  subscribe(symbol: string, cb: (price: number) => void) {
-    if (!this.socket) return;
+  /**
+   * Re-authenticates the existing connection with whatever token is
+   * currently in localStorage and forces a fresh handshake. Call this
+   * whenever the access token changes (login, token refresh, logout)
+   * instead of tearing down and recreating the socket - that way any
+   * widgets already subscribed via `subscribe()` don't need to do
+   * anything themselves; the 'connect' handler above resubscribes them.
+   */
+  updateAuthToken() {
+    if (!this.socket) {
+      this.connect();
+      return;
+    }
 
+    this.socket.auth = { token: localStorage.getItem('accessToken') };
+    this.socket.disconnect().connect();
+  }
+
+  subscribe(symbol: string, cb: (price: number) => void) {
     if (!this.listeners.has(symbol)) {
       this.listeners.set(symbol, new Set());
     }
 
     this.listeners.get(symbol)!.add(cb);
 
-    this.socket.emit('subscribe', symbol);
+    // If we're already connected, subscribe immediately. Otherwise the
+    // 'connect' handler above will send it as soon as the handshake
+    // completes, so we don't need to (and can't) emit on a socket that
+    // isn't open yet.
+    if (this.socket?.connected) {
+      this.socket.emit('subscribe', symbol);
+    }
   }
 
   unsubscribe(symbol: string, cb: (price: number) => void) {
-    this.listeners.get(symbol)?.delete(cb);
+    const set = this.listeners.get(symbol);
+    set?.delete(cb);
 
-    this.socket?.emit('unsubscribe', symbol);
+    if (set && set.size === 0) {
+      this.listeners.delete(symbol);
+    }
+
+    if (this.socket?.connected) {
+      this.socket.emit('unsubscribe', symbol);
+    }
   }
 
   disconnect() {
