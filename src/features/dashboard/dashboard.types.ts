@@ -10,8 +10,6 @@ export interface LayoutItem {
 
 export type Layouts = Partial<Record<Breakpoint, LayoutItem[]>>;
 
-export type LayoutsPayload = Record<Breakpoint, LayoutItem[]>;
-
 export interface DashboardState {
   layouts: Layouts;
 }

@@ -1,6 +1,5 @@
 import { useLogoutMutation } from '@/services/api/userApi';
 import { useAppDispatch } from '@/app/hooks';
-import { marketSocket } from '@/services/websocket/marketSocket';
 import { logout as logoutAction } from './authSlice';
 
 export const useLogout = () => {
@@ -19,7 +18,6 @@ export const useLogout = () => {
     localStorage.removeItem('userEmail');
 
     dispatch(logoutAction());
-    marketSocket.updateAuthToken();
   };
 
   return { logout };

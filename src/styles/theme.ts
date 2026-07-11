@@ -85,7 +85,6 @@ const buildTheme = (colors: typeof darkColors) => ({
   },
 
   layout: {
-    sidebarWidth: '248px',
     topbarHeight: '56px',
     bottomPanelHeight: '160px',
   },

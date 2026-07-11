@@ -18,7 +18,8 @@ describe('StatsWidget', () => {
     mockUseMarketPrice.mockReturnValue(undefined);
     renderWithProviders(<StatsWidget />);
 
-    // 5 stat rows, all showing the "no data yet" placeholder
+    // 4 of the 5 stat rows show the "no data yet" placeholder; the 5th
+    // (Samples) shows a count instead, asserted separately below.
     expect(screen.getAllByText('—')).toHaveLength(4);
     expect(screen.getByText('0')).toBeInTheDocument(); // samples count
   });

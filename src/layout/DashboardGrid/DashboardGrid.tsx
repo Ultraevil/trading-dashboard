@@ -45,6 +45,8 @@ export const DashboardGrid = () => {
 
   // Best-effort sync with the backend: if it has a saved layout,
   // prefer it over the locally persisted one once it arrives. Skipping
+  // the query while logged out avoids firing an authenticated-only
+  // request (and a guaranteed error) for a guest session.
   const { data } = useGetDashboardQuery(undefined, { skip: !isAuthenticated });
   const [saveDashboard] = useSaveDashboardMutation();
 

@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci:
-    name: Lint, typecheck, test & build Storybook
+    name: Lint, typecheck, test, build & build Storybook
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +32,9 @@ jobs:
 
       - name: Test
         run: npm test -- --ci --coverage
+
+      - name: Build
+        run: npm run build
 
       - name: Build Storybook
         run: npm run build-storybook
