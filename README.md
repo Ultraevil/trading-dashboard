@@ -8,7 +8,7 @@ light/dark theming, and a small plugin-style widget system.
 
 ```bash
 npm install
-cp .env.example .env   # fill in VITE_GRAPHQL_URL / VITE_WS_URL
+cp .env.example .env   # fill in VITE_GRAPHQL_URL / VITE_WS_URL / VITE_*_SYMBOL
 npm run dev
 ```
 
@@ -70,7 +70,7 @@ npm run test:e2e      # Playwright E2E (starts the dev server automatically)
   `shared/i18n/locales/{en,uk}/translation.json`. Language is auto-detected
   from the browser, persisted to `localStorage`, and switchable from the
   header icon or the Settings page. Yup's validation messages are
-  translation *keys*, translated at render time, so switching languages
+  translation _keys_, translated at render time, so switching languages
   re-translates errors that are already on screen.
 - **React Hook Form + Yup** (`@hookform/resolvers`) for form state and
   validation — `LoginForm` uses a schema (`LoginForm.schema.ts`) instead of
@@ -89,6 +89,12 @@ npm run test:e2e      # Playwright E2E (starts the dev server automatically)
 - **socket.io-client** for the live price feed (`services/websocket`),
   wrapped in a small class that tracks connection status and lets multiple
   widgets subscribe to the same symbol without opening multiple sockets.
+  Both the Brent Crude futures feed and BTC/USDT go through this same
+  channel; which exact symbols to subscribe to (`VITE_BRENT_SYMBOL`,
+  `VITE_BTC_SYMBOL`) come straight from env vars and must match the
+  backend's own `BRENT_SYMBOL`/`BTC_SYMBOL` — the socket re-authenticates
+  (`updateAuthToken()`) on login/logout so subscriptions immediately
+  reflect the current session.
 - A hand-written GraphQL layer: `services/graphql/client.ts` is a thin
   `fetch`-based RTK Query `baseQuery` (handles the `Bearer` token and
   silently retries once after refreshing on a 401), with query/mutation
@@ -123,16 +129,21 @@ Unit/component tests live next to the code they cover as `*.test.ts(x)`
 infrastructure. Playwright specs live in `e2e/` at the project root, since
 they test the running app rather than a single module.
 
-**State separation:** `features/widgets` owns *which* widgets are on the
-board; `features/dashboard` owns *where* they sit on the grid. They stay in
+**State separation:** `features/widgets` owns _which_ widgets are on the
+board; `features/dashboard` owns _where_ they sit on the grid. They stay in
 sync via `dashboardSlice`'s `extraReducers` listening to `widgetsSlice`'s
 `addWidget`/`removeWidget` actions, rather than one slice owning both
 concerns. Each is persisted to its own `localStorage` key independently.
 
 **Live data:** `useMarketPrice(symbol)` subscribes to the websocket and
 writes into the `market` slice (single source of truth), so `PriceWidget`,
-`ChartWidget`, and `StatsWidget` can all watch `BTCUSDT` without each
-holding its own copy or opening its own subscription.
+`ChartWidget`, and `StatsWidget` can all watch a symbol
+(`import.meta.env.VITE_BTC_SYMBOL`, `VITE_BRENT_SYMBOL`) without each
+holding its own copy or opening its own subscription. Brent Crude used to
+be fetched via a GraphQL query against a REST-backed price provider; it's
+now the same push-based websocket feed as everything else, since that's
+what actually reflects the TradingView futures price the widget is meant
+to show.
 
 ## UI/UX details worth noting
 

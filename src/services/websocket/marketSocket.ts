@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { env } from '@/config/env';
 
 type PriceEvent = {
   symbol: string;
@@ -34,7 +35,7 @@ class MarketSocket {
   connect() {
     if (this.socket) return;
 
-    this.socket = io(import.meta.env.VITE_WS_URL, {
+    this.socket = io(env.wsUrl, {
       transports: ['websocket'],
       auth: {
         token: localStorage.getItem('accessToken'),

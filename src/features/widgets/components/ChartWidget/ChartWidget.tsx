@@ -2,13 +2,21 @@ import { useTheme } from '@emotion/react';
 import { useTranslation } from 'react-i18next';
 import { useMarketPrice } from '@/features/market/useMarketPrice';
 import { useValueHistory } from '@/shared/hooks/useValueHistory';
-import { Wrapper, Header, Label, Value, ChartArea, EmptyState } from './ChartWidget.styles';
+import {
+  Wrapper,
+  Header,
+  Label,
+  Value,
+  ChartArea,
+  EmptyState,
+} from './ChartWidget.styles';
+import { env } from '@/config/env';
 
 const MAX_POINTS = 40;
 
 export const ChartWidget = () => {
   const { t } = useTranslation();
-  const price = useMarketPrice('BTCUSDT');
+  const price = useMarketPrice(env.btcSymbol);
   const theme = useTheme();
   const history = useValueHistory(price, MAX_POINTS);
 

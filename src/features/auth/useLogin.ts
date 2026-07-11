@@ -1,5 +1,6 @@
 import { useLoginMutation } from '@/services/api/userApi';
 import { useAppDispatch } from '@/app/hooks';
+import { marketSocket } from '@/services/websocket/marketSocket';
 import { setTokens } from './authSlice';
 
 export const useLogin = () => {
@@ -14,6 +15,8 @@ export const useLogin = () => {
     localStorage.setItem('accessToken', res.accessToken);
     localStorage.setItem('refreshToken', res.refreshToken);
     localStorage.setItem('userEmail', email);
+
+    marketSocket.updateAuthToken();
   };
 
   return { login, isLoading, error };

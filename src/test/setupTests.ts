@@ -8,3 +8,10 @@ if (typeof globalThis.TextEncoder === 'undefined') {
 }
 
 import '@testing-library/jest-dom';
+
+// PriceWidget/ChartWidget/StatsWidget read these via `import.meta.env`,
+// which babel-plugin-transform-vite-meta-env rewrites to `process.env` for
+// Jest. Setting fixed values here (matching .env.example) keeps tests
+// deterministic without requiring a real .env file.
+process.env.VITE_BRENT_SYMBOL = 'ICEEUR:BRN1!';
+process.env.VITE_BTC_SYMBOL = 'BTCUSDT';

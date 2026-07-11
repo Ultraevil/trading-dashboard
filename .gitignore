@@ -32,6 +32,11 @@ playwright-report
 test-results
 /playwright/.cache
 
+# Guard against a TS compile accidentally emitting alongside the e2e specs
+# (they're plain .ts run directly by Playwright, never meant to be built)
+e2e/*.js
+e2e/*.d.ts
+
 # Storybook
 storybook-static
 

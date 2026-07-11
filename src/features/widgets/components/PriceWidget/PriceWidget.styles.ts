@@ -65,14 +65,3 @@ export const Skeleton = styled.div`
     }
   }
 `;
-
-export const ErrorText = styled.p`
-  font-size: ${({ theme }) => theme.font.size.sm};
-  color: ${({ theme }) => theme.colors.red};
-`;
-
-export const Footer = styled.div`
-  margin-top: auto;
-  display: flex;
-  justify-content: flex-end;
-`;

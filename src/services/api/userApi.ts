@@ -2,7 +2,10 @@ import { baseApi } from './baseApi';
 import { LOGIN } from '@/services/graphql/mutations/login';
 import { REFRESH } from '@/services/graphql/mutations/refresh';
 import { LOGOUT } from '@/services/graphql/mutations/logout';
-import type { LoginResponse, LoginCredentials } from '@/features/auth/auth.types';
+import type {
+  LoginResponse,
+  LoginCredentials,
+} from '@/features/auth/auth.types';
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

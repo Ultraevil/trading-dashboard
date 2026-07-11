@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 import { renderWithProviders } from '@/test/test-utils';
 import { StatsWidget } from './StatsWidget';
+import { env } from '@/config/env';
 
 const mockUseMarketPrice = jest.fn();
 
@@ -31,10 +32,10 @@ describe('StatsWidget', () => {
     expect(screen.getByText('1')).toBeInTheDocument(); // samples count
   });
 
-  it('subscribes to the BTCUSDT symbol', () => {
+  it('subscribes to the shared BTC symbol', () => {
     mockUseMarketPrice.mockReturnValue(100);
     renderWithProviders(<StatsWidget />);
 
-    expect(mockUseMarketPrice).toHaveBeenCalledWith('BTCUSDT');
+    expect(mockUseMarketPrice).toHaveBeenCalledWith(env.btcSymbol);
   });
 });

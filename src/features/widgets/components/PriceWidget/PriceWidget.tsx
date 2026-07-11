@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { useGetBrentPriceQuery } from '@/services/api/brentApi';
 import { useMarketPrice } from '@/features/market/useMarketPrice';
 import { useTrend } from '@/shared/hooks/useTrend';
-import { Button } from '@/shared/ui/Button';
 import {
   Wrapper,
   Row,
@@ -10,17 +8,15 @@ import {
   Price,
   LivePrice,
   Skeleton,
-  ErrorText,
-  Footer,
 } from './PriceWidget.styles';
+import { env } from '@/config/env';
 
 export const PriceWidget = () => {
   const { t } = useTranslation();
-  const { data, isLoading, isFetching, error, refetch } =
-    useGetBrentPriceQuery();
-  const btcPrice = useMarketPrice('BTCUSDT');
+  const brentPrice = useMarketPrice(env.brentSymbol);
+  const btcPrice = useMarketPrice(env.btcSymbol);
 
-  const brentTrend = useTrend(data?.price);
+  const brentTrend = useTrend(brentPrice);
   const btcTrend = useTrend(btcPrice);
 
   return (
@@ -29,12 +25,10 @@ export const PriceWidget = () => {
         <Label>{t('widgets.price.brentLabel')}</Label>
       </Row>
 
-      {isLoading ? (
+      {brentPrice == null ? (
         <Skeleton />
-      ) : error ? (
-        <ErrorText role="alert">{t('widgets.price.error')}</ErrorText>
       ) : (
-        <Price trend={brentTrend}>${data?.price.toFixed(2)}</Price>
+        <Price trend={brentTrend}>${brentPrice.toFixed(2)}</Price>
       )}
 
       <Row>
@@ -46,17 +40,6 @@ export const PriceWidget = () => {
       ) : (
         <LivePrice trend={btcTrend}>${btcPrice.toFixed(2)}</LivePrice>
       )}
-
-      <Footer>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => refetch()}
-          isLoading={isFetching}
-        >
-          {t('common.refresh')}
-        </Button>
-      </Footer>
     </Wrapper>
   );
 };

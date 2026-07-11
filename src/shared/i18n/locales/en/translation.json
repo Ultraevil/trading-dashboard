@@ -65,9 +65,8 @@
   "widgets": {
     "price": {
       "title": "Brent Price",
-      "brentLabel": "Brent Crude (BRN)",
-      "btcLabel": "BTC/USDT · live",
-      "error": "Couldn't load the price."
+      "brentLabel": "Brent Futures · live",
+      "btcLabel": "BTC/USDT · live"
     },
     "chart": {
       "title": "BTC Chart",

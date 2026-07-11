@@ -1,11 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlBaseQuery } from '@/services/graphql/client';
+import { env } from '@/config/env';
 
 export const baseApi = createApi({
   reducerPath: 'api',
 
   baseQuery: graphqlBaseQuery({
-    baseUrl: import.meta.env.VITE_GRAPHQL_URL,
+    baseUrl: env.graphqlUrl,
   }),
 
   tagTypes: ['User', 'Market', 'Widget', 'Dashboard'],

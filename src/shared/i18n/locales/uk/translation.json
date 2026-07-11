@@ -65,9 +65,8 @@
   "widgets": {
     "price": {
       "title": "Ціна Brent",
-      "brentLabel": "Brent Crude (BRN)",
-      "btcLabel": "BTC/USDT · наживо",
-      "error": "Не вдалося завантажити ціну."
+      "brentLabel": "Brent Ф'ючерс · наживо",
+      "btcLabel": "BTC/USDT · наживо"
     },
     "chart": {
       "title": "Графік BTC",
