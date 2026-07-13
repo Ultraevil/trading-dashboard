@@ -15,6 +15,7 @@ import {
 } from '@/features/auth/authSelectors';
 import { useLogout } from '@/features/auth/useLogout';
 import { LoginForm } from '@/features/auth/LoginForm';
+import { useGetAlertsQuery } from '@/services/api/alertsApi';
 import { PATHS } from '@/routes/paths';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
@@ -26,6 +27,7 @@ import {
   NavList,
   NavButton,
   NavLink,
+  NavBadge,
   AccountSummary,
   AccountEmail,
 } from './Sidebar.styles';
@@ -38,6 +40,11 @@ export const Sidebar = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const email = useAppSelector(selectAuthEmail);
   const { logout } = useLogout();
+
+  const { data: alerts } = useGetAlertsQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+  const activeAlertsCount = alerts?.filter((alert) => alert.enabled).length ?? 0;
 
   const [widgetSearch, setWidgetSearch] = useState('');
 
@@ -74,6 +81,14 @@ export const Sidebar = () => {
             </NavLink>
             <NavLink to={PATHS.analytics} title={t('sidebar.nav.analytics')}>
               📈 {!isCollapsed && t('sidebar.nav.analytics')}
+            </NavLink>
+            <NavLink to={PATHS.alerts} title={t('sidebar.nav.alerts')}>
+              🔔 {!isCollapsed && t('sidebar.nav.alerts')}
+              {activeAlertsCount > 0 && (
+                <NavBadge aria-label={t('sidebar.activeAlertsCount', { count: activeAlertsCount })}>
+                  {activeAlertsCount}
+                </NavBadge>
+              )}
             </NavLink>
             <NavLink to={PATHS.settings} title={t('sidebar.nav.settings')}>
               ⚙️ {!isCollapsed && t('sidebar.nav.settings')}

@@ -28,14 +28,17 @@ npx playwright install chromium   # one-time browser download
 npm run test:e2e      # Playwright E2E (starts the dev server automatically)
 ```
 
-- **Jest + React Testing Library** — 45 tests across hooks (`useTrend`,
+- **Jest + React Testing Library** — 80 tests across hooks (`useTrend`,
   `useValueHistory`, `useMarketPrice`), shared UI (`Button`, `Input`,
-  `WidgetContainer`), a form (`LoginForm`, covering validation and
-  submit/error flows), a widget (`StatsWidget`), and the two Redux slices
-  whose cross-slice sync is the trickiest bit of state in the app
-  (`widgetsSlice` / `dashboardSlice`). External dependencies (the login
-  mutation, the market websocket) are mocked at the module boundary rather
-  than hitting the network, so these run fast and deterministically.
+  `Select`, `WidgetContainer`, `ConfirmDialog`), forms (`LoginForm`,
+  `AlertForm` — validation, create/edit, and server-error surfacing), a
+  widget (`StatsWidget`), the price-alert notification listener
+  (`useAlertNotifications`), the alert list's toggle/edit/delete flow
+  (`AlertListItem`), and the two Redux slices whose cross-slice sync is
+  the trickiest bit of dashboard state (`widgetsSlice` / `dashboardSlice`).
+  External dependencies (the login mutation, the market websocket) are
+  mocked at the module boundary rather than hitting the network, so these
+  run fast and deterministically.
   `src/test/` holds the shared `renderWithProviders` helper (wraps
   Redux/Theme/i18n/Router), a `createTestStore` factory so each test
   gets an isolated store, and `src/test/i18n.ts` (a fixed-English `t()`).
@@ -73,9 +76,10 @@ npm run test:e2e      # Playwright E2E (starts the dev server automatically)
   translation _keys_, translated at render time, so switching languages
   re-translates errors that are already on screen.
 - **React Hook Form + Yup** (`@hookform/resolvers`) for form state and
-  validation — `LoginForm` uses a schema (`LoginForm.schema.ts`) instead of
-  hand-rolled `useState`/regex checks, with field errors wired through
-  `aria-invalid`/`aria-describedby` on the shared `Input` component.
+  validation — `LoginForm` and `AlertForm` use a schema
+  (`*.schema.ts`) instead of hand-rolled `useState`/regex checks, with
+  field errors wired through `aria-invalid`/`aria-describedby` on the
+  shared `Input`/`Select` components.
 - **Emotion (`@emotion/styled` + `@emotion/react`)** for styling. Every
   component has a sibling `*.styles.ts` file — no inline styles, no
   CSS-in-JSX. A shared `styles/theme.ts` defines the design tokens (colors,
@@ -108,18 +112,22 @@ src/
 ├── routes/         route paths + <Routes> config
 ├── layout/         MainLayout shell (Header/Sidebar/BottomPanel) and the
 │                   DashboardGrid
-├── pages/          the three routed pages
+├── pages/          the four routed pages (Dashboard/Analytics/Alerts/
+│                   Settings)
 ├── features/       one folder per domain slice: auth, dashboard (grid
 │                   layout only), widgets (which widgets are active, the
 │                   type registry, and the widget components themselves —
 │                   PriceWidget/ChartWidget/StatsWidget — under
 │                   widgets/components/), market (live prices + socket
-│                   status), ui (sidebar collapse, toasts), theme
+│                   status), alerts (CRUD hooks + form/list components for
+│                   price alerts), ui (sidebar collapse, toasts, alert
+│                   sound preference), theme
 ├── services/       data layer: RTK Query endpoints (api/), GraphQL
 │                   transport (graphql/), websocket client (websocket/)
-├── shared/         ui/ (Button, Input, Toast, WidgetContainer — generic,
-│                   reusable, no feature imports), hooks/ (useTrend,
-│                   useValueHistory), i18n/ (en/uk translation resources +
+├── shared/         ui/ (Button, Input, Select, Toast, ConfirmDialog,
+│                   WidgetContainer — generic, reusable, no feature
+│                   imports), hooks/ (useTrend, useValueHistory), lib/
+│                   (playAlertSound), i18n/ (en/uk translation resources +
 │                   i18next config)
 └── styles/         theme tokens + global styles
 ```
@@ -145,6 +153,23 @@ now the same push-based websocket feed as everything else, since that's
 what actually reflects the TradingView futures price the widget is meant
 to show.
 
+**Price alerts:** CRUD goes through `services/api/alertsApi.ts`, injected
+into the same `baseApi`. Unlike the other endpoints, these use `queryFn`
+(not `query` + `transformResponse`) so a GraphQL business error — invalid
+input, "Alert not found" — surfaces as a real RTK Query error instead of
+crashing on a `null` response; `services/graphql/client.ts` exports a
+small `runGraphQL`/`getGraphQLErrorMessage` pair for this, reused by both
+`AlertForm` (inline field/form error) and `AlertListItem` (error toast).
+Toggle/delete apply an optimistic update to the cache (`onQueryStarted` +
+`patchResult.undo()` on failure) so those feel instant. The triggered-alert
+notification itself doesn't live on the alerts page: `MarketSocket` gained
+a second event listener (`onPriceAlert`, alongside the existing
+`onStatusChange`) for the backend's `price-alert` event — no new socket
+connection — and `AlertNotificationsProvider` mounts
+`useAlertNotifications()` once near the app root, so a toast (plus an
+optional synthesized beep, see `shared/lib/playAlertSound.ts`) shows up
+regardless of which page the user is on when an alert fires.
+
 ## UI/UX details worth noting
 
 - Loading (skeletons), error (with retry), and empty states (no widgets on
@@ -152,7 +177,11 @@ to show.
 - Widgets get remove buttons via `WidgetContainer`; the sidebar widget list
   shows an active/inactive state per widget and is itself searchable.
 - A small global toast system (`features/ui` + `shared/ui/Toast`) surfaces
-  login success — a real notification system rather than one-off `alert`s.
+  login success and triggered price alerts — a real notification system
+  rather than one-off `alert`s.
+- The sidebar shows a live badge next to "Alerts" with the count of
+  currently-enabled alerts, and deleting one goes through a proper
+  `ConfirmDialog` (Escape/backdrop-to-cancel) rather than `window.confirm`.
 - Responsive: three tiers, not just a single breakpoint —
   - **Desktop**: sidebar toggles between full width and a 72px icon rail.
   - **Tablet** (≤900px): sidebar becomes a horizontal strip stacked above

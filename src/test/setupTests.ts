@@ -15,3 +15,14 @@ import '@testing-library/jest-dom';
 // deterministic without requiring a real .env file.
 process.env.VITE_BRENT_SYMBOL = 'ICEEUR:BRN1!';
 process.env.VITE_BTC_SYMBOL = 'BTCUSDT';
+
+Object.defineProperty(window, 'Audio', {
+  writable: true,
+  value: class {
+    play = jest.fn().mockResolvedValue(undefined);
+    pause = jest.fn();
+    currentTime = 0;
+    volume = 1;
+    preload = 'auto';
+  },
+});

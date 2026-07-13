@@ -18,13 +18,15 @@
     "nav": {
       "dashboard": "Дашборд",
       "analytics": "Аналітика",
+      "alerts": "Алерти",
       "settings": "Налаштування"
     },
     "widgets": "Віджети",
     "searchWidgets": "Пошук віджетів…",
     "searchWidgetsAria": "Пошук віджетів",
     "noWidgetsMatch": "Не знайдено віджетів за запитом «{{query}}».",
-    "account": "Обліковий запис"
+    "account": "Обліковий запис",
+    "activeAlertsCount": "Активних алертів: {{count}}"
   },
   "auth": {
     "email": "Електронна пошта",
@@ -61,6 +63,41 @@
     "refreshAria": "Оновити {{title}}",
     "removeWidget": "Видалити віджет",
     "removeAria": "Видалити {{title}}"
+  },
+  "alerts": {
+    "fields": {
+      "symbol": "Символ",
+      "condition": "Умова",
+      "targetPrice": "Цільова ціна"
+    },
+    "condition": {
+      "ABOVE": "Вище",
+      "BELOW": "Нижче"
+    },
+    "targetPricePlaceholder": "напр. 65000",
+    "createAlert": "Створити алерт",
+    "saveChanges": "Зберегти зміни",
+    "cancel": "Скасувати",
+    "edit": "Редагувати",
+    "delete": "Видалити",
+    "enable": "Увімкнути",
+    "disable": "Вимкнути",
+    "empty": "У вас поки немає алертів — створіть перший нижче.",
+    "statusActive": "Активний",
+    "statusDisabled": "Вимкнений",
+    "triggeredAt": "Спрацював о {{time}}",
+    "confirmDelete": "Видалити цей алерт?",
+    "notifications": {
+      "triggered": "{{symbol}} тепер {{condition}} {{targetPrice}} (поточна ціна: {{currentPrice}})"
+    },
+    "errors": {
+      "symbolRequired": "Оберіть символ",
+      "conditionRequired": "Оберіть умову",
+      "targetPriceRequired": "Введіть цільову ціну",
+      "targetPriceInvalid": "Введіть коректне число",
+      "targetPricePositive": "Число має бути додатним",
+      "generic": "Щось пішло не так. Спробуйте ще раз."
+    }
   },
   "widgets": {
     "price": {
@@ -101,7 +138,16 @@
       "collapseSidebar": "Згорнути бічну панель",
       "expandedView": "Розгорнутий вигляд",
       "collapsedView": "Згорнутий вигляд",
+      "notifications": "Сповіщення",
+      "alertSound": "Звук алертів",
+      "soundOn": "Увімк.",
+      "soundOff": "Вимк.",
       "account": "Обліковий запис"
+    },
+    "alerts": {
+      "title": "Цінові алерти",
+      "createTitle": "Новий алерт",
+      "listTitle": "Ваші алерти"
     }
   }
 }

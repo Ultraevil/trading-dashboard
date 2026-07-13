@@ -12,10 +12,12 @@ export interface Toast {
 
 export interface UiState {
   isSidebarCollapsed: boolean;
+  isAlertSoundEnabled: boolean;
   toasts: Toast[];
 }
 
 const MOBILE_QUERY = '(max-width: 600px)';
+const ALERT_SOUND_STORAGE_KEY = 'alertSoundEnabled';
 
 /**
  * On desktop `isSidebarCollapsed` toggles between a full sidebar and a
@@ -29,8 +31,17 @@ const getInitialSidebarCollapsed = (): boolean => {
   return window.matchMedia(MOBILE_QUERY).matches;
 };
 
+const getInitialAlertSoundEnabled = (): boolean => {
+  if (typeof window === 'undefined') return true;
+  const stored = window.localStorage.getItem(ALERT_SOUND_STORAGE_KEY);
+  // Defaults to on: a triggered price alert is exactly the kind of thing
+  // you want to notice even with the tab in the background.
+  return stored === null ? true : stored === 'true';
+};
+
 const initialState: UiState = {
   isSidebarCollapsed: getInitialSidebarCollapsed(),
+  isAlertSoundEnabled: getInitialAlertSoundEnabled(),
   toasts: [],
 };
 
@@ -44,6 +55,11 @@ const uiSlice = createSlice({
 
     setSidebarCollapsed: (state, action: PayloadAction<boolean>) => {
       state.isSidebarCollapsed = action.payload;
+    },
+
+    setAlertSoundEnabled: (state, action: PayloadAction<boolean>) => {
+      state.isAlertSoundEnabled = action.payload;
+      localStorage.setItem(ALERT_SOUND_STORAGE_KEY, String(action.payload));
     },
 
     addToast: {
@@ -61,11 +77,19 @@ const uiSlice = createSlice({
   },
 });
 
-export const { toggleSidebar, setSidebarCollapsed, addToast, removeToast } =
-  uiSlice.actions;
+export const {
+  toggleSidebar,
+  setSidebarCollapsed,
+  setAlertSoundEnabled,
+  addToast,
+  removeToast,
+} = uiSlice.actions;
 
 export const selectIsSidebarCollapsed = (state: RootState) =>
   state.ui.isSidebarCollapsed;
+
+export const selectIsAlertSoundEnabled = (state: RootState) =>
+  state.ui.isAlertSoundEnabled;
 
 export const selectToasts = (state: RootState) => state.ui.toasts;
 

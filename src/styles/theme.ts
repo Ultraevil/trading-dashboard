@@ -86,7 +86,7 @@ const buildTheme = (colors: typeof darkColors) => ({
 
   layout: {
     topbarHeight: '56px',
-    bottomPanelHeight: '160px',
+    bottomPanelHeight: '40px',
   },
 
   breakpoint: {

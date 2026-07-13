@@ -2,14 +2,14 @@ import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { refreshTokenRequest } from '@/services/auth/refreshToken';
 import { setAccessToken, logout } from '@/features/auth/authSlice';
 
-type GraphQLError = {
+export type GraphQLError = {
   message: string;
   extensions?: {
     code?: string;
   };
 };
 
-type GraphQLResponse<T> = {
+export type GraphQLResponse<T> = {
   data?: T;
   errors?: GraphQLError[];
 };
@@ -73,3 +73,62 @@ export const graphqlBaseQuery =
 
     return { data };
   };
+
+/**
+ * Runs a GraphQL request through the given `baseQuery` (so auth/refresh
+ * still works exactly as it does for every other endpoint) and, unlike a
+ * plain `query` + `transformResponse` endpoint, also turns a GraphQL-level
+ * business error (e.g. validation, "not found") into a proper RTK Query
+ * error instead of letting `res.data` be `null` and blowing up on
+ * `res.data.someField`.
+ *
+ * `graphqlBaseQuery` above already handles the UNAUTHENTICATED/401 case;
+ * this is for everything else a resolver can reject with. Use it from an
+ * endpoint's `queryFn` when the caller needs to show the server's error
+ * message (e.g. in a form) rather than treat every response as a success.
+ */
+export const runGraphQL = async <TData, TResult>(
+  baseQuery: BaseQueryFn,
+  baseQueryApi: Parameters<BaseQueryFn>[1],
+  extraOptions: Parameters<BaseQueryFn>[2],
+  query: string,
+  variables: unknown,
+  pick: (data: TData) => TResult,
+) => {
+  const result = await baseQuery(
+    { body: JSON.stringify(variables ? { query, variables } : { query }) },
+    baseQueryApi,
+    extraOptions,
+  );
+
+  if (result.error) return { error: result.error };
+
+  const envelope = result.data as GraphQLResponse<TData>;
+
+  if (envelope.errors?.length) {
+    return {
+      error: { status: 'CUSTOM_ERROR', data: envelope.errors[0].message },
+    };
+  }
+
+  return { data: pick(envelope.data as TData) };
+};
+
+/**
+ * Pulls the human-readable message back out of an error produced by
+ * `runGraphQL` above (the `{ status: 'CUSTOM_ERROR', data: string }` shape),
+ * for components that want to show it directly - e.g. as a form error or a
+ * toast - rather than a generic "something went wrong".
+ */
+export const getGraphQLErrorMessage = (error: unknown): string | undefined => {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'data' in error &&
+    typeof (error as { data?: unknown }).data === 'string'
+  ) {
+    return (error as { data: string }).data;
+  }
+
+  return undefined;
+};

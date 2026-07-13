@@ -9,7 +9,7 @@ export const baseApi = createApi({
     baseUrl: env.graphqlUrl,
   }),
 
-  tagTypes: ['User', 'Dashboard'],
+  tagTypes: ['User', 'Dashboard', 'Alert'],
 
   endpoints: () => ({}),
 });

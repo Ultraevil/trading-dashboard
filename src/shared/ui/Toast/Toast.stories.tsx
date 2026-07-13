@@ -13,7 +13,7 @@ import { ToastContainer } from './ToastContainer';
  */
 const withToasts = (toasts: Toast[]): Decorator => {
   const store = createTestStore({
-    ui: { isSidebarCollapsed: false, toasts },
+    ui: { isSidebarCollapsed: false, isAlertSoundEnabled: true, toasts },
   });
 
   return (Story) => (

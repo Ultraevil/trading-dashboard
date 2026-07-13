@@ -1,5 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { env } from '@/config/env';
+import type { PriceAlertPayload } from '@/features/alerts/alert.types';
 
 type PriceEvent = {
   symbol: string;
@@ -16,6 +17,8 @@ class MarketSocket {
 
   private statusListeners = new Set<(status: SocketStatus) => void>();
 
+  private alertListeners = new Set<(payload: PriceAlertPayload) => void>();
+
   private status: SocketStatus = 'idle';
 
   private setStatus(status: SocketStatus) {
@@ -30,6 +33,20 @@ class MarketSocket {
   onStatusChange(cb: (status: SocketStatus) => void) {
     this.statusListeners.add(cb);
     return () => this.statusListeners.delete(cb);
+  }
+
+  /**
+   * Subscribes to the `price-alert` event, sent only to the alert's owner
+   * (the server routes it to a private per-user room, so there's no
+   * per-symbol subscribe step like `subscribe()` below - every listener
+   * here just gets whatever this user's own alerts trigger). Unlike the
+   * per-symbol price listeners, this isn't cleared on disconnect/reconnect
+   * cycles - a global notification listener has no per-connection state to
+   * re-establish.
+   */
+  onPriceAlert(cb: (payload: PriceAlertPayload) => void) {
+    this.alertListeners.add(cb);
+    return () => this.alertListeners.delete(cb);
   }
 
   connect() {
@@ -58,6 +75,10 @@ class MarketSocket {
       if (!set) return;
 
       set.forEach((cb) => cb(data.price));
+    });
+
+    this.socket.on('price-alert', (payload: PriceAlertPayload) => {
+      this.alertListeners.forEach((cb) => cb(payload));
     });
 
     this.socket.on('disconnect', () => {

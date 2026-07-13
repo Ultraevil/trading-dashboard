@@ -128,6 +128,22 @@ export const NavLink = styled(RouterNavLink)`
   }
 `;
 
+export const NavBadge = styled.span`
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: ${({ theme }) => theme.radii.pill};
+  background: ${({ theme }) => theme.colors.accent};
+  color: white;
+  font-size: ${({ theme }) => theme.font.size.xs};
+  font-weight: 600;
+  line-height: 1;
+`;
+
 export const AccountSummary = styled.div`
   display: flex;
   flex-direction: column;

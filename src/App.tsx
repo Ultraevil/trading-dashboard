@@ -5,6 +5,7 @@ import { getTheme } from '@/styles/theme';
 import { globalStyles } from '@/styles/GlobalStyle';
 import { MarketProvider } from '@/app/providers/MarketProvider';
 import { SessionCleanupProvider } from '@/app/providers/SessionCleanupProvider';
+import { AlertNotificationsProvider } from '@/app/providers/AlertNotificationsProvider';
 import { ToastContainer } from '@/shared/ui/Toast';
 import { AppRoutes } from '@/routes';
 
@@ -17,8 +18,10 @@ export const App = () => {
       <Global styles={globalStyles} />
       <SessionCleanupProvider>
         <MarketProvider>
-          <AppRoutes />
-          <ToastContainer />
+          <AlertNotificationsProvider>
+            <AppRoutes />
+            <ToastContainer />
+          </AlertNotificationsProvider>
         </MarketProvider>
       </SessionCleanupProvider>
     </ThemeProvider>

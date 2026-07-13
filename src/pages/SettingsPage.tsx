@@ -4,6 +4,8 @@ import { selectThemeMode, setThemeMode } from '@/features/theme/themeSlice';
 import {
   selectIsSidebarCollapsed,
   setSidebarCollapsed,
+  selectIsAlertSoundEnabled,
+  setAlertSoundEnabled,
 } from '@/features/ui/uiSlice';
 import {
   selectIsAuthenticated,
@@ -26,6 +28,7 @@ export const SettingsPage = () => {
   const dispatch = useAppDispatch();
   const themeMode = useAppSelector(selectThemeMode);
   const isSidebarCollapsed = useAppSelector(selectIsSidebarCollapsed);
+  const isAlertSoundEnabled = useAppSelector(selectIsAlertSoundEnabled);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const email = useAppSelector(selectAuthEmail);
   const { logout } = useLogout();
@@ -86,6 +89,22 @@ export const SettingsPage = () => {
             {isSidebarCollapsed
               ? t('pages.settings.expandedView')
               : t('pages.settings.collapsedView')}
+          </Button>
+        </Row>
+      </Card>
+
+      <Card>
+        <CardTitle>{t('pages.settings.notifications')}</CardTitle>
+        <Row>
+          <span>{t('pages.settings.alertSound')}</span>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => dispatch(setAlertSoundEnabled(!isAlertSoundEnabled))}
+          >
+            {isAlertSoundEnabled
+              ? t('pages.settings.soundOn')
+              : t('pages.settings.soundOff')}
           </Button>
         </Row>
       </Card>

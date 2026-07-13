@@ -18,13 +18,15 @@
     "nav": {
       "dashboard": "Dashboard",
       "analytics": "Analytics",
+      "alerts": "Alerts",
       "settings": "Settings"
     },
     "widgets": "Widgets",
     "searchWidgets": "Search widgets…",
     "searchWidgetsAria": "Search widgets",
     "noWidgetsMatch": "No widgets match “{{query}}”.",
-    "account": "Account"
+    "account": "Account",
+    "activeAlertsCount": "{{count}} active alerts"
   },
   "auth": {
     "email": "Email",
@@ -61,6 +63,41 @@
     "refreshAria": "Refresh {{title}}",
     "removeWidget": "Remove widget",
     "removeAria": "Remove {{title}}"
+  },
+  "alerts": {
+    "fields": {
+      "symbol": "Symbol",
+      "condition": "Condition",
+      "targetPrice": "Target price"
+    },
+    "condition": {
+      "ABOVE": "Above",
+      "BELOW": "Below"
+    },
+    "targetPricePlaceholder": "e.g. 65000",
+    "createAlert": "Create alert",
+    "saveChanges": "Save changes",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "enable": "Enable",
+    "disable": "Disable",
+    "empty": "You don't have any alerts yet — create one below.",
+    "statusActive": "Active",
+    "statusDisabled": "Disabled",
+    "triggeredAt": "Triggered at {{time}}",
+    "confirmDelete": "Delete this alert?",
+    "notifications": {
+      "triggered": "{{symbol}} is now {{condition}} {{targetPrice}} (current: {{currentPrice}})"
+    },
+    "errors": {
+      "symbolRequired": "Choose a symbol",
+      "conditionRequired": "Choose a condition",
+      "targetPriceRequired": "Enter a target price",
+      "targetPriceInvalid": "Enter a valid number",
+      "targetPricePositive": "Must be a positive number",
+      "generic": "Something went wrong. Please try again."
+    }
   },
   "widgets": {
     "price": {
@@ -101,7 +138,16 @@
       "collapseSidebar": "Collapse sidebar",
       "expandedView": "Expanded view",
       "collapsedView": "Collapsed view",
+      "notifications": "Notifications",
+      "alertSound": "Alert sound",
+      "soundOn": "On",
+      "soundOff": "Off",
       "account": "Account"
+    },
+    "alerts": {
+      "title": "Price Alerts",
+      "createTitle": "New alert",
+      "listTitle": "Your alerts"
     }
   }
 }
