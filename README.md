@@ -17,7 +17,7 @@ Other scripts: `npm run build`, `npm run lint`, `npm run typecheck`, `npm run fo
 ## Live Demo
 
 Demo Video:
-https://www.loom.com/share/fe505548ca1d47fd9c74219be3d7a468
+https://www.loom.com/share/92f39f30dae94d14a4bfc9181196c9cb
 
 ## Testing
 
